@@ -5,19 +5,22 @@
 
 #include <vector>
 
-class Algue {
-private:
-    S2d Position;
-    double Age;
+class Lifeform {
+    protected :
+        S2d Position;
+        double Age;
+    public:
+        Lifeform(S2d position, double age);
+};
+
+class Algue : public Lifeform { 
 public :
     Algue(double x, double y, double age);
 };
 
-class Corail {
+class Corail : public Lifeform {
 private:
-    S2d Origin;
     S2d End;
-    double Age;
     unsigned Id_cor;
     bool Statut_cor;
     bool Dir_rot;
@@ -36,10 +39,8 @@ public:
     std::vector<Segment> getSegments() const ;
 };
 
-class Scavenger {
+class Scavenger : public Lifeform {
 private:
-    S2d Position;
-    double Age;
     double Rayon;
     bool Statut;
     unsigned Corail_id_cible;

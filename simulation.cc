@@ -153,7 +153,7 @@ void Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
             segment_list.pop_back();
 	    }
 
-        for (int i(0); i < segment_list.size(); i++) {
+        for (unsigned i(0); i < segment_list.size(); i++) {
             S2d p1(segment_list[i].getOrigin()), q1(segment_list[i].getEnd());
             
             S2d p2(new_seg.getOrigin()), q2(new_seg.getEnd());

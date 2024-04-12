@@ -12,12 +12,13 @@
 
 using namespace std;
 
-Algue::Algue(double x, double y, double age)
-: Position{x, y}, Age(age)
-{    
-    if (!((x >= 1) && (x <= dmax - 1) && (y >= 1) && (y <= dmax - 1)))
+
+Lifeform::Lifeform(S2d position, double age)
+:Position(position), Age(age)
+{
+    if (!((position.x >= 1) && (position.x <= dmax - 1) && (position.y >= 1) && (position.y <= dmax - 1)))
     {
-        cout << message::lifeform_center_outside(x, y);
+        cout << message::lifeform_center_outside(position.x, position.y);
         exit(EXIT_FAILURE);
     }
 
@@ -27,23 +28,17 @@ Algue::Algue(double x, double y, double age)
     }
 }
 
+Algue::Algue(double x, double y, double age)
+: Lifeform({x, y}, age)
+{}
+
 
 Corail::Corail(double x, double y, double age, unsigned id, bool statut_cor,
 				bool dir_rot, bool statut_dev, unsigned nbseg)
-:Origin{x, y}, Age(age), Id_cor(id), Statut_cor(statut_cor), Dir_rot(dir_rot),
+:Lifeform({x, y}, age), Id_cor(id), Statut_cor(statut_cor), Dir_rot(dir_rot),
 Nbseg(nbseg)
 {
-    if (!((x >= 1) && (x <= dmax - 1) && (y >= 1) && (y <= dmax - 1))) {
-        cout << message::lifeform_center_outside(x, y);
-        exit(EXIT_FAILURE);
-    }
-
-    if (Age <= 0) {
-        cout << message::lifeform_age(static_cast<int>(Age));
-        exit(EXIT_FAILURE);
-    }
-
-    End = Origin;
+    End = Position;
 }
 
 void Corail::addSegment(Segment seg, bool reading) {
@@ -89,7 +84,7 @@ vector<Segment> Corail::getSegments() const {
 }
 
 void Corail::Superposition() {
-    for (int i(0); i < Segments.size() - 1; i++)
+    for (unsigned i(0); i < Segments.size() - 1; i++)
     {
         if (angleDev(Segments[i], Segments[i+1]) == 0.) {
             cout << message::segment_superposition(Id_cor, i, i + 1);
@@ -100,25 +95,12 @@ void Corail::Superposition() {
 
 Scavenger::Scavenger(double x, double y, double age, double rayon, double status,
 	int corail_id_cible)
-:Position{x, y}, Age(age), Rayon(rayon), Statut(status),
+:Lifeform({x, y}, age), Rayon(rayon), Statut(status),
 	Corail_id_cible(corail_id_cible)
 {
-    if (!((x >= 1) && (x <= dmax - 1) && (y >= 1) && (y <= dmax - 1)))
-    {
-        cout << message::lifeform_center_outside(x, y);
-        exit(EXIT_FAILURE);
-    }
-
-    if (Age <= 0)
-    {
-        cout << message::lifeform_age(static_cast<int>(Age));
-        exit(EXIT_FAILURE);
-    }
-
     if (!((Rayon >= r_sca) && (Rayon < r_sca_repro)))
     {
         cout << message::scavenger_radius_outside(static_cast<unsigned int>(Rayon));
         exit(EXIT_FAILURE);
     }
-
 }
