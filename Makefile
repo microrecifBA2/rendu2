@@ -10,16 +10,16 @@ LDLIBS = `pkg-config --libs gtkmm-4.0`
 all: $(OUT)
 
 shape.o: shape.cc shape.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 lifeform.o: lifeform.cc shape.h constantes.h message.h lifeform.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 simulation.o: simulation.cc message.h simulation.h shape.h lifeform.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 message.o: message.cc message.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 gui.o: gui.cc gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)

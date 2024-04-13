@@ -130,7 +130,7 @@ bool Simulation::readFile(const string& filename) {
     }
     file.close();
     cout << message::success();
-    exit(0);
+    return 1;
 }
 
 bool Simulation::idAlreadyExists(unsigned id) {
