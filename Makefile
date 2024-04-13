@@ -1,35 +1,37 @@
 # Definitions de macros
 
-CXX     = g++
+OUT = projet
+CXX  = g++
 CXXFLAGS = -g -Wall -std=c++17
-CXXFILES = projet.cc shape.cc lifeform.cc simulation.cc message.cc
-OFILES = $(CXXFILES:.cc=.o)
+OFILES = projet.o shape.o lifeform.o simulation.o message.o gui.o
+LINKING = `pkg-config --cflags gtkmm-4.0`
+LDLIBS = `pkg-config --libs gtkmm-4.0`
 
-# Definition de la premiere regle
+all: $(OUT)
 
-projet: $(OFILES)
-	$(CXX) $(OFILES) -o projet
+shape.o: shape.cc shape.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Definitions de cibles particulieres
+lifeform.o: lifeform.cc shape.h constantes.h message.h lifeform.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-depend:
-	@echo " *** MISE A JOUR DES DEPENDANCES ***"
-	@(sed '/^# DO NOT DELETE THIS LINE/q' Makefile && \
-	  $(CXX) -MM $(CXXFLAGS) $(CXXFILES) | \
-	  egrep -v "/usr/include" \
-	 ) >Makefile.new
-	@mv Makefile.new Makefile
+simulation.o: simulation.cc message.h simulation.h shape.h lifeform.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+
+message.o: message.cc message.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+
+gui.o: gui.cc gui.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+
+projet.o: projet.cc gui.h simulation.h shape.h lifeform.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+
+$(OUT): $(OFILES)
+	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
+
 
 clean:
 	@echo " *** EFFACE MODULES OBJET ET EXECUTABLE ***"
 	@/bin/rm -f *.o *.x *.cc~ *.h~ projet
 
-#
-# -- Regles de dependances generees automatiquement
-#
-# DO NOT DELETE THIS LINE
-projet.o: projet.cc simulation.h shape.h lifeform.h
-shape.o: shape.cc shape.h
-lifeform.o: lifeform.cc shape.h constantes.h message.h lifeform.h
-simulation.o: simulation.cc message.h simulation.h shape.h lifeform.h
-message.o: message.cc message.h
