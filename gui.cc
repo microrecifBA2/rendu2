@@ -86,7 +86,7 @@ void MyEvent::on_button_clicked_save()
 	// est fourni à GTKmm
 }
 
-void on_button_clicked_start()
+void MyEvent::on_button_clicked_start()
 {
 	// déclenché avec bouton start ou touche "s"
 
@@ -96,15 +96,15 @@ void on_button_clicked_start()
 	alors le timer s’arrête et le label redevient “start” */
 }
 
-void on_button_clicked_stop()
+void MyEvent::on_button_clicked_stop()
 {
 	// cf bouton start
 }
 
-void on_button_clicked_step()
+void MyEvent::on_button_clicked_step()
 {	
 	// déclenché avec bouton step ou touche "1"
-	
+
 	/*
 	 l’action de ce bouton est seulement prise en compte quand la simulation n’est pas en cours
 	d’exécution (c’est à dire quand on voit le label “start” au-dessus du bouton “step”). Dans ce contexte, un
