@@ -14,18 +14,22 @@ using namespace std;
 
 
 Lifeform::Lifeform(S2d position, double age)
-:Position(position), Age(age)
+:Position(position), Age(age), Success(true)
 {
     if (!((position.x >= 1) && (position.x <= dmax - 1) && (position.y >= 1) && (position.y <= dmax - 1)))
     {
         cout << message::lifeform_center_outside(position.x, position.y);
-        exit(EXIT_FAILURE);
+        Success = false;
     }
 
     if (Age <= 0) {
-        cout << message::lifeform_age(static_cast<int>(Age));
-        exit(EXIT_FAILURE);
+        cout << message::lifeform_age(Age);
+        Success = false;
     }
+}
+
+bool Lifeform::lifeformSuccess() const {
+    return Success;
 }
 
 Algue::Algue(double x, double y, double age)
@@ -48,12 +52,12 @@ void Corail::addSegment(Segment seg, bool reading) {
     if (seg.is_length_outside() or \
     !((length >= l_repro - l_seg_interne) && (length < l_repro))) {
         cout << message::segment_length_outside(Id_cor, length);
-        exit(EXIT_FAILURE);
+        Success = false;
     }
 
     if (seg.is_angle_outside()) {
         cout << message::segment_angle_outside(Id_cor, angle);
-        exit(EXIT_FAILURE);
+        Success = false;
     }
 
     End = seg.getEnd();
@@ -61,7 +65,7 @@ void Corail::addSegment(Segment seg, bool reading) {
     if (!((End.x > epsil) && (End.x < dmax - epsil) && (End.y > epsil) && \
 		(End.y < dmax - epsil))) {
             cout << message::lifeform_computed_outside(Id_cor, End.x, End.y);
-            exit(EXIT_FAILURE);
+            Success = false;
     }
 
     Segments.push_back(seg);
@@ -88,7 +92,7 @@ void Corail::Superposition() {
     {
         if (angleDev(Segments[i], Segments[i+1]) == 0.) {
             cout << message::segment_superposition(Id_cor, i, i + 1);
-            exit(EXIT_FAILURE);
+            Success = false;
         }
     }
 }
@@ -101,6 +105,6 @@ Scavenger::Scavenger(double x, double y, double age, double rayon, double status
     if (!((Rayon >= r_sca) && (Rayon < r_sca_repro)))
     {
         cout << message::scavenger_radius_outside(static_cast<unsigned int>(Rayon));
-        exit(EXIT_FAILURE);
+        Success = false;
     }
 }

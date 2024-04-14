@@ -16,13 +16,13 @@ private:
 
 public:
     std::vector<std::vector<double>> storeTokens(std::ifstream& file);
-    void corVerifs(unsigned &beg_data_entity, unsigned &end_data_entity, \
+    bool corVerifs(unsigned &beg_data_entity, unsigned &end_data_entity, \
 		std::vector<std::vector<double>> token_list, bool &cor, unsigned &seg_line, \
 		std::vector<double> line);
-    void scaVerifs(std::vector<double> line);
+    bool scaVerifs(std::vector<double> line);
     bool readFile(const std::string &filename);
     bool idAlreadyExists(unsigned id);
-    void Collisions(Corail new_cor, Segment new_seg, bool reading);
+    bool Collisions(Corail new_cor, Segment new_seg, bool reading);
 };
 
 

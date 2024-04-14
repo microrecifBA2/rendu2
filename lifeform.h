@@ -6,11 +6,14 @@
 #include <vector>
 
 class Lifeform {
-    protected :
-        S2d Position;
-        double Age;
-    public:
-        Lifeform(S2d position, double age);
+protected:
+    S2d Position;
+    double Age;
+    bool Success; // Changer le type de Success en bool
+
+public:
+    Lifeform(S2d position, double age);
+    bool lifeformSuccess() const; // Changer le type de retour en bool
 };
 
 class Algue : public Lifeform { 

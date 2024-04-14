@@ -38,18 +38,20 @@ vector<vector<double>> Simulation::storeTokens(ifstream& file) {
     return token_list;
 }
 
-void Simulation::corVerifs(unsigned& beg_data_entity, \
+bool Simulation::corVerifs(unsigned& beg_data_entity, \
 	unsigned& end_data_entity, vector<vector<double>> token_list, \
 	bool& cor, unsigned& seg_line, vector<double> line) {
     if (cor){ // Si on est en train de lire les données générales du corail
         seg_line = 0;
         if (idAlreadyExists(line[3])) {
             cout << message::lifeform_duplicated_id(line[3]);
-            exit(EXIT_FAILURE);
+            return false;
         }
 
         Corail corail(line[0], line[1], line[2], line[3], line[4], line[5], \
             line[6], line[7]);
+        
+        if (!corail.lifeformSuccess()){return false;}
 
         Coraux.push_back(corail);
         
@@ -63,7 +65,7 @@ void Simulation::corVerifs(unsigned& beg_data_entity, \
         Segment cur_seg(cur_cor->getEnd(), line[0], line[1]);
         cur_cor->addSegment(cur_seg, true);
         cur_cor->Superposition();
-        Collisions(*cur_cor, cur_seg, true);
+        if (Collisions(*cur_cor, cur_seg, true) == false){return false;}
 
         ++seg_line;
         if (seg_line == cur_cor->getNbseg())
@@ -74,14 +76,16 @@ void Simulation::corVerifs(unsigned& beg_data_entity, \
     }
 }
 
-void Simulation::scaVerifs(vector<double> line) {
+bool Simulation::scaVerifs(vector<double> line) {
     if (line[4]) {
         Scavenger scavenger(line[0], line[1], line[2], line[3], line[4],
                             line[5]);
+        
+        if (!scavenger.lifeformSuccess()) {return false;}
 
         if (!(idAlreadyExists(line[5]))) {
             cout << message::lifeform_invalid_id(line[5]);
-            exit(EXIT_FAILURE);
+            return false;
         }
 
         Scavengers.push_back(scavenger);
@@ -92,9 +96,15 @@ void Simulation::scaVerifs(vector<double> line) {
     }
 }
 bool Simulation::readFile(const string& filename) {
+    Coraux.clear();
+    Algues.clear();
+    Scavengers.clear();
+
+    bool success(true);
+    
     ifstream file(filename);
     if ((!file.is_open()) or (file.fail())) { 
-        return 1; 
+        success = false; 
     }
     vector<vector<double>> token_list(storeTokens(file));
     enum current_type {ALGUES, CORAUX, SCAVENGERS};
@@ -108,16 +118,17 @@ bool Simulation::readFile(const string& filename) {
         if ((curr == ALGUES) && (line_idx >= beg_data_entity) &&
             (line_idx <= end_data_entity)){
             Algue algue(line[0], line[1], line[2]);
+            if (!algue.lifeformSuccess()) {success = false;}
             Algues.push_back(algue);
         }
         else if ((curr == CORAUX) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
-            corVerifs(beg_data_entity, end_data_entity, token_list, cor, \
-			seg_line, line);
+            if (corVerifs(beg_data_entity, end_data_entity, token_list, cor, \
+			seg_line, line) == false){success = false;}
         }
         else if ((curr == SCAVENGERS) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
-            scaVerifs(line);
+            if (scaVerifs(line) == false){success = false;};
         }
         if (line_idx == end_data_entity) {
             if (curr == ALGUES) {curr = CORAUX;}
@@ -128,9 +139,18 @@ bool Simulation::readFile(const string& filename) {
         }
         line_idx++;
     }
+
+    if (success == false) {
+        Coraux.clear();
+        Algues.clear();
+        Scavengers.clear();
+
+        return false;
+    }
+    
     file.close();
     cout << message::success();
-    return 1;
+    return true;
 }
 
 bool Simulation::idAlreadyExists(unsigned id) {
@@ -143,7 +163,7 @@ bool Simulation::idAlreadyExists(unsigned id) {
     return false;
 }
 
-void Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
+bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
     unsigned new_cor_id = new_cor.getId();
     for (auto& corail : Coraux) { 
         vector<Segment> segment_list(corail.getSegments());
@@ -162,7 +182,7 @@ void Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
             {
                 cout << message::segment_collision(corail.getId(), i, new_cor_id, \
 					new_cor.getSegments().size()-1);
-                exit(EXIT_FAILURE);
+                return false;
             }
         }
     }
