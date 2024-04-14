@@ -67,6 +67,18 @@ MyEvent::MyEvent():
 	
 	m_Button_Exit.signal_clicked().connect(
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_exit));
+
+	m_Button_Open.signal_clicked().connect(
+		sigc::mem_fun(*this, &MyEvent::on_button_clicked_open));
+
+	m_Button_Save.signal_clicked().connect(
+		sigc::mem_fun(*this, &MyEvent::on_button_clicked_save));
+	
+	m_Button_Start.signal_clicked().connect(
+		sigc::mem_fun(*this, &MyEvent::on_button_clicked_start));
+
+	m_Button_Step.signal_clicked().connect(
+		sigc::mem_fun(*this, &MyEvent::on_button_clicked_step));
 		
 }
 
