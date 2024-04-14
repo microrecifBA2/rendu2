@@ -75,3 +75,40 @@ void MyEvent::on_button_clicked_exit()
 	exit(EXIT_SUCCESS);
 }
 
+void MyEvent::on_button_clicked_open()
+{
+	// lire un fichier avec GTKmm pour initialiser une simulation avec detection d’erreur
+}
+
+void MyEvent::on_button_clicked_save()
+{
+	// sauvegarder l’état courant de la simulation (éventuellement vide) dans un fichier dont le nom
+	// est fourni à GTKmm
+}
+
+void on_button_clicked_start()
+{
+	// déclenché avec bouton start ou touche "s"
+
+	/* le label du bouton devient “stop” et un timer est lancé qui produit l’affichage d’un compteur
+	entier qui progresse d’une unité à chaque execution du signal handler du timer. Cela permet de simuler
+	l’appel d’une mise à jour de la simulation. Si on re-clique sur le bouton (qui maintenant affiche “stop”)
+	alors le timer s’arrête et le label redevient “start” */
+}
+
+void on_button_clicked_stop()
+{
+	// cf bouton start
+}
+
+void on_button_clicked_step()
+{	
+	// déclenché avec bouton step ou touche "1"
+	
+	/*
+	 l’action de ce bouton est seulement prise en compte quand la simulation n’est pas en cours
+	d’exécution (c’est à dire quand on voit le label “start” au-dessus du bouton “step”). Dans ce contexte, un
+	clic sur ce bouton produit UNE SEULE mise à jour de la simulation. Cela est simulé en faisant afficher une
+	seule incrémentation du compteur utilisé par le timer
+	*/
+}

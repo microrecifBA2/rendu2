@@ -30,6 +30,11 @@ public:
 protected:
 	//Button Signal handlers:
 	void on_button_clicked_exit();
+	void on_button_clicked_open();
+	void on_button_clicked_save();
+	void on_button_clicked_start();
+	void on_button_clicked_stop();
+	void on_button_clicked_step();
 
 	MyArea m_Area;
 
