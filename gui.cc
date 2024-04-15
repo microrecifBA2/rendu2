@@ -17,7 +17,6 @@ MyArea::~MyArea()
 }
 
 
-
 MyEvent::MyEvent():
 	m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
 	m_Interface_Box(Gtk::Orientation::VERTICAL, 2),

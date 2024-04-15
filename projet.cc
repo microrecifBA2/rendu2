@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     
     if (argc > 2) {
-        return 1;
+        exit(EXIT_FAILURE);
     }
     string filename = argv[1];
 
@@ -22,5 +22,5 @@ int main(int argc, char* argv[]) {
 
     auto app = Gtk::Application::create();
 
-	return app->make_window_and_run<MyEvent>(argc, argv);
+	return app->make_window_and_run<MyEvent>(1, argv);
 }

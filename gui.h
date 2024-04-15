@@ -1,5 +1,5 @@
-#ifndef GTKMM_MY_EVENT_H
-#define GTKMM_MY_EVENT_H
+#ifndef GUI_H
+#define GUI_H
 
 #include <gtkmm/window.h>
 #include <gtkmm/box.h>
@@ -60,4 +60,4 @@ protected:
 
 };
 
-#endif // GTKMM_MY_EVENT_H
+#endif // GUI_H
