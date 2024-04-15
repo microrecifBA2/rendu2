@@ -36,6 +36,13 @@ Algue::Algue(double x, double y, double age)
 : Lifeform({x, y}, age)
 {}
 
+S2d Lifeform::getPosition() const {
+    return Position;
+}
+
+double Lifeform::getAge() const {
+    return Age;
+}
 
 Corail::Corail(double x, double y, double age, unsigned id, bool statut_cor,
 				bool dir_rot, bool statut_dev, unsigned nbseg)
@@ -107,4 +114,16 @@ Scavenger::Scavenger(double x, double y, double age, double rayon, double status
         cout << message::scavenger_radius_outside(static_cast<unsigned int>(Rayon));
         Success = false;
     }
+}
+
+double Scavenger::getRadius() const {
+    return Rayon;
+}
+
+double Scavenger::getStatus() const {
+    return Statut;
+}
+
+double Scavenger::getId() const {
+    return Corail_id_cible;
 }

@@ -13,6 +13,8 @@ protected:
 
 public:
     Lifeform(S2d position, double age);
+    S2d getPosition() const;
+    double getAge() const;
     bool lifeformSuccess() const; // Changer le type de retour en bool
 };
 
@@ -51,6 +53,9 @@ private:
 public:
     Scavenger(double x, double y, double age, double radius, double status,
         int corail_id_cible = -1);
+    double getRadius() const;
+    double getStatus() const;
+    double getId() const;
 };
 
 #endif // LIFEFORM_H

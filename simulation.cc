@@ -74,6 +74,7 @@ bool Simulation::corVerifs(unsigned& beg_data_entity, \
             cor = true;
         }
     }
+    return true;
 }
 
 bool Simulation::scaVerifs(vector<double> line) {
@@ -94,7 +95,19 @@ bool Simulation::scaVerifs(vector<double> line) {
         Scavenger scavenger(line[0], line[1], line[2], line[3], line[4]);
         Scavengers.push_back(scavenger);
     }
+    return true;
 }
+
+void Simulation::test(const string& filename) {
+    if (!readFile(filename)) {
+        sauvegarde(false);
+    }
+    else {
+        // fichier de simulation rempli
+        sauvegarde();
+    }
+} 
+
 bool Simulation::readFile(const string& filename) {
     Coraux.clear();
     Algues.clear();
@@ -153,6 +166,52 @@ bool Simulation::readFile(const string& filename) {
     return true;
 }
 
+bool Simulation::sauvegarde(bool success) {
+    fstream fichier_sauvegarde;
+	fichier_sauvegarde.open("sauvegarde.txt", ios::out);
+    
+    unsigned nb_alg(0), nb_cor(0), nb_sca(0);
+    
+    if (success) {
+        nb_alg = Algues.size();
+        nb_cor = Coraux.size();
+        nb_sca = Scavengers.size();
+
+        fichier_sauvegarde << to_string(nb_alg) << endl;
+        for(auto& algue: Algues) {
+            fichier_sauvegarde << "\t" << to_string(algue.getPosition().x) << " " << to_string(algue.getPosition().y) << " " << to_string(algue.getAge()) << endl;
+        }
+
+        fichier_sauvegarde << to_string(nb_cor) << endl;
+        
+        for(auto& corail: Coraux) {
+            fichier_sauvegarde << "\t" << to_string(corail.getPosition().x) << " " << to_string(corail.getPosition().y) << " " << to_string(corail.getAge()) << endl;
+            for (auto& segment: corail.getSegments()) {
+                fichier_sauvegarde << "\t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
+            }
+        }
+
+        fichier_sauvegarde << to_string(nb_sca) << endl;
+
+        for(auto& sca: Scavengers) {
+            fichier_sauvegarde << "\t" << to_string(sca.getPosition().x) << " " << to_string(sca.getPosition().y) << " " << to_string(sca.getAge()) << " " << to_string(sca.getRadius()) << " " << to_string(sca.getStatus());
+            if (sca.getStatus() != 0) {
+                 fichier_sauvegarde << " " << to_string(sca.getId());
+            }
+            fichier_sauvegarde << endl;
+        }
+
+    }
+
+    
+
+	if (fichier_sauvegarde) {
+		fichier_sauvegarde.close(); 
+        return 0;
+	}
+    return 1;
+}
+
 bool Simulation::idAlreadyExists(unsigned id) {
     for (const auto &corail : Coraux)
     {
@@ -186,6 +245,7 @@ bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
             }
         }
     }
+    return true;
 }
 
 ostream& operator<<(ostream& sortie, S2d const& point) {

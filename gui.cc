@@ -1,14 +1,15 @@
-#include "gui.h"
 #include <cairomm/context.h>
 #include <gtkmm/label.h>
 #include <iostream>
 
-constexpr int area_side(200);
+#include "gui.h"
+
+constexpr unsigned taille_dessin(500);
 
 MyArea::MyArea(): empty(false)
 {
-	set_content_width(area_side);
-	set_content_height(area_side);
+	set_content_width(taille_dessin);
+	set_content_height(taille_dessin);
 	
 }
 
