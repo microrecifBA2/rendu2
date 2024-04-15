@@ -1,5 +1,3 @@
-# Definitions de macros
-
 OUT = projet
 CXX  = g++
 CXXFLAGS = -g -Wall -std=c++17
@@ -10,21 +8,21 @@ LDLIBS = `pkg-config --libs gtkmm-4.0`
 all: $(OUT)
 
 shape.o: shape.cc shape.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 lifeform.o: lifeform.cc shape.h constantes.h message.h lifeform.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 simulation.o: simulation.cc message.h simulation.h shape.h lifeform.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 message.o: message.cc message.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 gui.o: gui.cc gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
-projet.o: projet.cc gui.h simulation.h shape.h lifeform.h
+projet.o: projet.cc gui.h simulation.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 $(OUT): $(OFILES)
