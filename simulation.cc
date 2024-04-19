@@ -178,7 +178,7 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
     fichier_sauvegarde << endl << to_string(nb_cor) << endl;
     
     for(auto& corail: coraux) {
-        fichier_sauvegarde << "\t" << corail.getPosition() << " " << to_string(corail.getAge()) << endl;
+        fichier_sauvegarde << "\t" << corail.getPosition() << " " << to_string(corail.getAge()) << " " << to_string(corail.getId()) << " " << to_string(corail.getStatut_cor()) << " " << to_string(corail.getDir_rot()) << " " << to_string(corail.getStatut_dev()) << " " << to_string(corail.getNbseg()) << endl;
         for (auto& segment: corail.getSegments()) {
             fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
         }
@@ -202,7 +202,7 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
     return 1;
 }
 
-// void Simulation::execution(bool naissance_alg, default_random_engine e) {
+// void Simulation::execution(bool naissance_alg) {
 //     for (auto alg = algues.begin(); alg != algues.end();) {
 //         alg->incrementer();
 //         if (alg->getAge() >= max_life_alg) {

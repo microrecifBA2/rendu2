@@ -10,7 +10,6 @@ protected:
     S2d position;
     double age;
     bool success;
-    virtual void draw() = 0;
 
 public:
     Lifeform(S2d position, double age);
@@ -23,7 +22,6 @@ public:
 class Algue : public Lifeform { 
 public :
     Algue(double x, double y, double age);
-    void draw() override;
 };
 
 class Corail : public Lifeform {
@@ -41,11 +39,15 @@ public:
 		bool statut_dev, unsigned nbseg);
     void addSegment(Segment seg, bool reading);
     void Superposition();
-    unsigned getNbseg() const;
     unsigned getId() const;
+    bool getStatut_cor() const;
+    bool getDir_rot() const;
+    bool getStatut_dev() const;
+    unsigned getNbseg() const;
     S2d getEnd() const;
+
     std::vector<Segment> getSegments() const;
-    void draw() override;
+    void draw();
 };
 
 class Scavenger : public Lifeform {
@@ -53,7 +55,6 @@ private:
     double rayon;
     bool statut;
     unsigned corail_id_cible;
-    void draw() override;
 
 public:
     Scavenger(double x, double y, double age, double radius, double status,

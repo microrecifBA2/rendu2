@@ -2,12 +2,13 @@
 #include <gtkmm/label.h>
 #include <iostream>
 
-#include "simulation.h"
 #include "gui.h"
 
 constexpr unsigned taille_dessin(500);
 
-MyArea::MyArea() {
+MyArea::MyArea(Simulation* simulation)
+:simulation(simulation)
+{
 	set_content_width(taille_dessin);
 	set_content_height(taille_dessin);
 	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
@@ -23,11 +24,13 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	xc = width / 2; 
 	yc = height / 2;
 
-	draw_coraux();
+	simulation->draw_coraux();
 }
 
 
-MyEvent::MyEvent():
+MyEvent::MyEvent(Simulation simulation_):
+	simulation(simulation_),
+	m_Area(&simulation),
 	m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
 	m_Interface_Box(Gtk::Orientation::VERTICAL, 2),
 	m_Buttons_Box(Gtk::Orientation::VERTICAL, 6),
@@ -89,27 +92,42 @@ MyEvent::MyEvent():
 	m_Button_Step.signal_clicked().connect(
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_step));
 
-		
+	//signal_key_press_event().connect(sigc::mem_fun(*this, &MyArea::on_key_press_event));
 }
 
-void MyEvent::on_button_clicked_exit()
-{
+/*void MyEvent::on_key_press_event(GdkEventKey* event) {
+	if (event->keyval == GDK_KEY_s) {
+		myEvent.on_button_clicked_start();
+	}
+	else if (event->keyval == GDK_KEY_1) {
+		myEvent.on_button_clicked_step();
+	}
+}*/
+
+void MyEvent::on_button_clicked_exit() {
 	exit(EXIT_SUCCESS);
 }
 
-void MyEvent::on_button_clicked_open()
-{
+void MyEvent::on_button_clicked_open() {
+	//on_file_dialog_response(response_id=1);
 	// lire un fichier avec GTKmm pour initialiser une simulation avec detection d’erreur
+	
 }
 
-void MyEvent::on_button_clicked_save()
-{
+void MyEvent::on_button_clicked_save() {
 	// sauvegarder l’état courant de la simulation (éventuellement vide) dans un fichier dont le nom
 	// est fourni à GTKmm
 }
 
-void MyEvent::on_button_clicked_start()
-{
+void MyEvent::on_button_clicked_start() {
+	/*if (started == true) {
+		started = false;
+		m_Button_Start.set_label("start");
+	}
+	else {
+		started = true;
+		m_Button_Start.set_label("stop");
+	}
 	// déclenché avec bouton start ou touche "s"
 
 	/* le label du bouton devient “stop” et un timer est lancé qui produit l’affichage d’un compteur
@@ -118,13 +136,9 @@ void MyEvent::on_button_clicked_start()
 	alors le timer s’arrête et le label redevient “start” */
 }
 
-void MyEvent::on_button_clicked_stop()
-{
-	// cf bouton start
-}
+void MyEvent::on_button_clicked_step() {
+	//step = true;
 
-void MyEvent::on_button_clicked_step()
-{	
 	// déclenché avec bouton step ou touche "1"
 
 	/*

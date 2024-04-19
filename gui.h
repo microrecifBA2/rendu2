@@ -9,31 +9,32 @@
 #include <gtkmm/checkbutton.h>
 
 #include "graphic_gui.h"
+#include "simulation.h"
 
-class MyArea : public Gtk::DrawingArea
-{
+class MyArea : public Gtk::DrawingArea {
 public:
-	MyArea();
+	MyArea(Simulation* simulation);
 	virtual ~MyArea();
 	
 
 protected:
-void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+	Simulation* simulation;
+	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 
 };
 
-class MyEvent : public Gtk::Window
-{
+class MyEvent : public Gtk::Window {
 public:
-	MyEvent();
+	MyEvent(Simulation simulation_);
+//	void on_key_press_event(GdkEventKey* event);
 
 protected:
+	Simulation simulation;
 	//Button Signal handlers:
 	void on_button_clicked_exit();
 	void on_button_clicked_open();
 	void on_button_clicked_save();
 	void on_button_clicked_start();
-	void on_button_clicked_stop();
 	void on_button_clicked_step();
 
 	MyArea m_Area;
@@ -57,7 +58,6 @@ protected:
 	Gtk::Label m_Label_Alg;
 	Gtk::Label m_Label_Cor;
 	Gtk::Label m_Label_Sca;
-
 };
 
 #endif // GUI_H

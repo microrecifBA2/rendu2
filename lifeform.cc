@@ -92,12 +92,24 @@ void Corail::Superposition() {
     }
 }
 
-unsigned Corail::getNbseg() const{
-    return nbseg;
-}
-
 unsigned Corail::getId() const{
     return id_cor;
+}
+
+bool Corail::getStatut_cor() const {
+    return statut_cor;
+}
+
+bool Corail::getDir_rot() const {
+    return dir_rot;
+}
+
+bool Corail::getStatut_dev() const {
+    return statut_dev;
+}
+
+unsigned Corail::getNbseg() const{
+    return nbseg;
 }
 
 S2d Corail::getEnd() const {

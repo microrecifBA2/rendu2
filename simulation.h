@@ -15,7 +15,7 @@ private:
     std::vector<Corail> coraux;
     std::vector<Algue> algues;
     std::vector<Scavenger> scavengers;
-    //static default_random_engine e;
+//    static std::default_random_engine e;
 
 public:
     std::vector<std::vector<double>> storeTokens(std::ifstream& file);
@@ -25,7 +25,7 @@ public:
     bool scaVerifs(std::vector<double> line);
     bool readFile(const std::string &filename);
     bool sauvegarde(std::string nom_sauvegarde = "sauvegarde.txt");
-    //void execution(bool naissance_alg, default_random_engine e);
+//    void execution(bool naissance_alg);
     bool idAlreadyExists(unsigned id);
     bool Collisions(Corail new_cor, Segment new_seg, bool reading);
     void draw_coraux();
