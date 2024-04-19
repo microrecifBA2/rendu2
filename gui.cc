@@ -2,6 +2,7 @@
 #include <gtkmm/label.h>
 #include <iostream>
 
+#include "simulation.h"
 #include "gui.h"
 
 constexpr unsigned taille_dessin(500);
@@ -22,7 +23,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	xc = width / 2; 
 	yc = height / 2;
 
-	graphic_draw_line(10., 0., 0., 100., 100.);
+	draw_coraux();
 }
 
 

@@ -128,6 +128,6 @@ bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading) {
 }
 
 
-void draw_line(const int width, double x1, double y1, double x2, double y2, double R, double G, double B) {
-    graphic_draw_line(width, x1, y1,  x2, y2, R, G, B);
+void draw_line(const int width, double x1, double y1, double x2, double y2, Color couleur) {
+    graphic_draw_line(width, x1, y1,  x2, y2, couleur);
 }

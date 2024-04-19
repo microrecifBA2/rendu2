@@ -82,6 +82,16 @@ void Corail::addSegment(Segment seg, bool reading) {
     segments.push_back(seg);
 }
 
+void Corail::Superposition() {
+    for (unsigned i(0); i < segments.size() - 1; i++)
+    {
+        if (angleDev(segments[i], segments[i+1]) == 0.) {
+            cout << message::segment_superposition(id_cor, i, i + 1);
+            success = false;
+        }
+    }
+}
+
 unsigned Corail::getNbseg() const{
     return nbseg;
 }
@@ -98,13 +108,14 @@ vector<Segment> Corail::getSegments() const {
     return segments;
 }
 
-void Corail::Superposition() {
-    for (unsigned i(0); i < segments.size() - 1; i++)
-    {
-        if (angleDev(segments[i], segments[i+1]) == 0.) {
-            cout << message::segment_superposition(id_cor, i, i + 1);
-            success = false;
-        }
+void Corail::draw() {
+    for (auto& segment: segments){
+        double x1 = segment.getOrigin().x;
+        double y1 = segment.getOrigin().y;
+        double x2= segment.getEnd().x;
+        double y2 = segment.getEnd().x;
+
+        draw_line(5., x1, y1, x2, y2, statut_cor? BLUE : BLACK);
     }
 }
 

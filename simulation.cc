@@ -259,6 +259,12 @@ bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
     return true;
 }
 
+void Simulation::draw_coraux() {
+    for(auto& corail: coraux){
+        corail.draw();
+    }
+}
+
 ostream& operator<<(ostream& sortie, S2d const& point) {
     sortie << to_string(point.x) << " " << to_string(point.y );
     return sortie;

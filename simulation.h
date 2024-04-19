@@ -28,6 +28,7 @@ public:
     //void execution(bool naissance_alg, default_random_engine e);
     bool idAlreadyExists(unsigned id);
     bool Collisions(Corail new_cor, Segment new_seg, bool reading);
+    void draw_coraux();
 };
 
 
