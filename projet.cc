@@ -18,8 +18,8 @@ int main(int argc, char* argv[]) {
 
     Simulation simulation;
 
-    simulation.test(filename);
-    //simulation.readFile(filename);
+    simulation.readFile(filename);
+    simulation.sauvegarde();
 
     auto app = Gtk::Application::create();
 

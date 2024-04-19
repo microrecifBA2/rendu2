@@ -41,7 +41,7 @@ vector<vector<double>> Simulation::storeTokens(ifstream& file) {
 bool Simulation::corVerifs(unsigned& beg_data_entity, \
 	unsigned& end_data_entity, vector<vector<double>> token_list, \
 	bool& cor, unsigned& seg_line, vector<double> line) {
-    if (cor){ // Si on est en train de lire les données générales du corail
+    if (cor) { // Si on est en train de lire les données générales du corail
         seg_line = 0;
         if (idAlreadyExists(line[3])) {
             cout << message::lifeform_duplicated_id(line[3]);
@@ -51,9 +51,9 @@ bool Simulation::corVerifs(unsigned& beg_data_entity, \
         Corail corail(line[0], line[1], line[2], line[3], line[4], line[5], \
             line[6], line[7]);
         
-        if (!corail.lifeformSuccess()){return false;}
+        if (!corail.lifeformSuccess()) {return false;}
 
-        Coraux.push_back(corail);
+        coraux.push_back(corail);
         
         end_data_entity += static_cast<int>(corail.getNbseg());
 
@@ -61,15 +61,14 @@ bool Simulation::corVerifs(unsigned& beg_data_entity, \
     }
 
     else {
-        Corail *cur_cor(&Coraux.back());
+        Corail *cur_cor(&coraux.back());
         Segment cur_seg(cur_cor->getEnd(), line[0], line[1]);
         cur_cor->addSegment(cur_seg, true);
         cur_cor->Superposition();
-        if (Collisions(*cur_cor, cur_seg, true) == false){return false;}
+        if (Collisions(*cur_cor, cur_seg, true) == false) {return false;}
 
         ++seg_line;
-        if (seg_line == cur_cor->getNbseg())
-        {               
+        if (seg_line == cur_cor->getNbseg()) {               
             // On lit de nouveau les informations générales d'un nouveau corail
             cor = true;
         }
@@ -89,29 +88,20 @@ bool Simulation::scaVerifs(vector<double> line) {
             return false;
         }
 
-        Scavengers.push_back(scavenger);
+        scavengers.push_back(scavenger);
     }
     else {
         Scavenger scavenger(line[0], line[1], line[2], line[3], line[4]);
-        Scavengers.push_back(scavenger);
+        scavengers.push_back(scavenger);
     }
     return true;
 }
 
-void Simulation::test(const string& filename) {
-    if (!readFile(filename)) {
-        sauvegarde(false);
-    }
-    else {
-        // fichier de simulation rempli
-        sauvegarde();
-    }
-} 
 
 bool Simulation::readFile(const string& filename) {
-    Coraux.clear();
-    Algues.clear();
-    Scavengers.clear();
+    coraux.clear();
+    algues.clear();
+    scavengers.clear();
 
     bool success(true);
     
@@ -132,16 +122,16 @@ bool Simulation::readFile(const string& filename) {
             (line_idx <= end_data_entity)){
             Algue algue(line[0], line[1], line[2]);
             if (!algue.lifeformSuccess()) {success = false;}
-            Algues.push_back(algue);
+            algues.push_back(algue);
         }
         else if ((curr == CORAUX) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
             if (corVerifs(beg_data_entity, end_data_entity, token_list, cor, \
-			seg_line, line) == false){success = false;}
+			seg_line, line) == false) {success = false;}
         }
         else if ((curr == SCAVENGERS) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
-            if (scaVerifs(line) == false){success = false;};
+            if (scaVerifs(line) == false) {success = false;};
         }
         if (line_idx == end_data_entity) {
             if (curr == ALGUES) {curr = CORAUX;}
@@ -154,9 +144,9 @@ bool Simulation::readFile(const string& filename) {
     }
 
     if (success == false) {
-        Coraux.clear();
-        Algues.clear();
-        Scavengers.clear();
+        coraux.clear();
+        algues.clear();
+        scavengers.clear();
 
         return false;
     }
@@ -166,55 +156,50 @@ bool Simulation::readFile(const string& filename) {
     return true;
 }
 
-bool Simulation::sauvegarde(bool success) {
+bool Simulation::sauvegarde() {
     fstream fichier_sauvegarde;
 	fichier_sauvegarde.open("sauvegarde.txt", ios::out);
     
     unsigned nb_alg(0), nb_cor(0), nb_sca(0);
     
-    if (success) {
-        nb_alg = Algues.size();
-        nb_cor = Coraux.size();
-        nb_sca = Scavengers.size();
+    nb_alg = algues.size();
+    nb_cor = coraux.size();
+    nb_sca = scavengers.size();
 
-        fichier_sauvegarde << to_string(nb_alg) << endl;
-        for(auto& algue: Algues) {
-            fichier_sauvegarde << "\t" << to_string(algue.getPosition().x) << " " << to_string(algue.getPosition().y) << " " << to_string(algue.getAge()) << endl;
-        }
-
-        fichier_sauvegarde << to_string(nb_cor) << endl;
-        
-        for(auto& corail: Coraux) {
-            fichier_sauvegarde << "\t" << to_string(corail.getPosition().x) << " " << to_string(corail.getPosition().y) << " " << to_string(corail.getAge()) << endl;
-            for (auto& segment: corail.getSegments()) {
-                fichier_sauvegarde << "\t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
-            }
-        }
-
-        fichier_sauvegarde << to_string(nb_sca) << endl;
-
-        for(auto& sca: Scavengers) {
-            fichier_sauvegarde << "\t" << to_string(sca.getPosition().x) << " " << to_string(sca.getPosition().y) << " " << to_string(sca.getAge()) << " " << to_string(sca.getRadius()) << " " << to_string(sca.getStatus());
-            if (sca.getStatus() != 0) {
-                 fichier_sauvegarde << " " << to_string(sca.getId());
-            }
-            fichier_sauvegarde << endl;
-        }
-
+    fichier_sauvegarde << to_string(nb_alg) << endl;
+    for(auto& algue: algues) {
+        fichier_sauvegarde << "\t" << to_string(algue.getPosition().x) << " " << to_string(algue.getPosition().y) << " " << to_string(algue.getAge()) << endl;
     }
 
+    fichier_sauvegarde << endl << to_string(nb_cor) << endl;
     
+    for(auto& corail: coraux) {
+        fichier_sauvegarde << "\t" << corail.getPosition() << " " << to_string(corail.getAge()) << endl;
+        for (auto& segment: corail.getSegments()) {
+            fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
+        }
+    }
+
+    fichier_sauvegarde << endl << to_string(nb_sca) << endl;
+
+    for(auto& sca: scavengers) {
+        fichier_sauvegarde << "\t" << sca.getPosition() << " " << to_string(sca.getAge()) << " " << to_string(sca.getRadius()) << " " << to_string(sca.getStatus());
+        if (sca.getStatus() != 0) {
+                fichier_sauvegarde << " " << to_string(sca.getId());
+        }
+        fichier_sauvegarde << endl;
+    }
 
 	if (fichier_sauvegarde) {
 		fichier_sauvegarde.close(); 
         return 0;
 	}
+
     return 1;
 }
 
 bool Simulation::idAlreadyExists(unsigned id) {
-    for (const auto &corail : Coraux)
-    {
+    for (const auto &corail : coraux) {
         if (corail.getId() == id) {
             return true;
         }
@@ -224,7 +209,7 @@ bool Simulation::idAlreadyExists(unsigned id) {
 
 bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
     unsigned new_cor_id = new_cor.getId();
-    for (auto& corail : Coraux) { 
+    for (auto& corail : coraux) { 
         vector<Segment> segment_list(corail.getSegments());
 
         if ((corail.getId() == new_cor_id) && (segment_list.size() >= 2)) {
@@ -237,8 +222,7 @@ bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
             
             S2d p2(new_seg.getOrigin()), q2(new_seg.getEnd());
             
-            if (doIntersect(p1, q1, p2, q2, reading))
-            {
+            if (doIntersect(p1, q1, p2, q2, reading)) {
                 cout << message::segment_collision(corail.getId(), i, new_cor_id, \
 					new_cor.getSegments().size()-1);
                 return false;
@@ -249,6 +233,6 @@ bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
 }
 
 ostream& operator<<(ostream& sortie, S2d const& point) {
-    sortie << "(" << point.x << "," << point.y << ")";
+    sortie << to_string(point.x) << " " << to_string(point.y );
     return sortie;
 }

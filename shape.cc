@@ -13,7 +13,7 @@ void S2d::operator=(S2d const& other) {
 }
 
 Segment::Segment(S2d origin, double angle, double length) 
-:Origin(origin), Angle(angle), Length(length)
+:origin(origin), angle(angle), length(length)
 {
     if(!((angle >= -M_PI) and (angle <= M_PI))) {
         angle_outside = true;
@@ -26,22 +26,22 @@ Segment::Segment(S2d origin, double angle, double length)
 }
 
 S2d Segment::getOrigin() const {
-    return Origin;
+    return origin;
 }
 
 S2d Segment::getEnd() const {
     S2d point;
-    point.x = Origin.x + Length * cos(Angle);
-    point.y = Origin.y + Length * sin(Angle);
+    point.x = origin.x + length * cos(angle);
+    point.y = origin.y + length * sin(angle);
     return point;
 }
 
 double Segment::getAngle() const {
-    return Angle;
+    return angle;
 }
 
 double Segment::getLength() const {
-    return Length;
+    return length;
 }
 
 bool Segment::is_angle_outside() const {
@@ -53,15 +53,15 @@ bool Segment::is_length_outside() const {
 }
 
 // Manipulateurs
-void Segment::setAngle(double angle) {
-    Angle = angle;
+void Segment::setAngle(double ang) {
+    angle = ang;
     if(!((angle >= -M_PI) and (angle <= M_PI))) {
         angle_outside = true;
     }
 }
 
-void Segment::setLength(double length) {
-    Length = length;
+void Segment::setLength(double len) {
+    length = len;
     if (length < 0) {
         length_outside = true;
     }
@@ -84,8 +84,7 @@ double angleDev(const Segment& seg1, const Segment& seg2) {
 	return delta - 2*M_PI;
 }
 
-double orientation(S2d p, S2d q, S2d r, bool reading)
-{
+double orientation(S2d p, S2d q, S2d r, bool reading) {
     double epsil = reading ? 0. : epsil_zero;
     double val = (q.y - p.y) * (r.x - q.x) - 
               (q.x - p.x) * (r.y - q.y); 
@@ -97,8 +96,7 @@ double orientation(S2d p, S2d q, S2d r, bool reading)
     return (val > 0)? 1: 2;
 } 
 
-bool onSegment(S2d p, S2d q, S2d r, bool reading) 
-{ 
+bool onSegment(S2d p, S2d q, S2d r, bool reading) { 
     double epsil = reading ? 0. : epsil_zero;
     double pr_norm = Dist(p, r);
     double x = s_product(p, q, r)/pr_norm;
@@ -109,8 +107,7 @@ bool onSegment(S2d p, S2d q, S2d r, bool reading)
     return false; 
 }
 
-bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading) 
-{
+bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading) {
     int o1 = orientation(p1, q1, p2, reading); 
     int o2 = orientation(p1, q1, q2, reading); 
     int o3 = orientation(p2, q2, p1, reading); 

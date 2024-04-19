@@ -15,9 +15,9 @@ struct S2d {
 
 class Segment {
 private:
-    S2d Origin;
-    double Angle;
-    double Length;
+    S2d origin;
+    double angle;
+    double length;
     bool length_outside = false;
     bool angle_outside = false;
 public:

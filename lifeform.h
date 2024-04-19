@@ -7,9 +7,9 @@
 
 class Lifeform {
 protected:
-    S2d Position;
-    double Age;
-    bool Success; // Changer le type de Success en bool
+    S2d position;
+    double age;
+    bool success; // Changer le type de Success en bool
 
 public:
     Lifeform(S2d position, double age);
@@ -25,13 +25,13 @@ public :
 
 class Corail : public Lifeform {
 private:
-    S2d End;
-    unsigned Id_cor;
-    bool Statut_cor;
-    bool Dir_rot;
-    bool Statut_dev; 
-    unsigned Nbseg;
-    std::vector<Segment> Segments;
+    S2d end;
+    unsigned id_cor;
+    bool statut_cor;
+    bool dir_rot;
+    bool statut_dev; 
+    unsigned nbseg;
+    std::vector<Segment> segments;
 
 public:
     Corail(double x, double y, double age, unsigned id, bool statut_cor, bool dir_rot,
@@ -46,9 +46,9 @@ public:
 
 class Scavenger : public Lifeform {
 private:
-    double Rayon;
-    bool Statut;
-    unsigned Corail_id_cible;
+    double rayon;
+    bool statut;
+    unsigned corail_id_cible;
 
 public:
     Scavenger(double x, double y, double age, double radius, double status,

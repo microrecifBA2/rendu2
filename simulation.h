@@ -11,9 +11,9 @@
 class Simulation{
 private:
     std::string filename;
-    std::vector<Corail> Coraux;
-    std::vector<Algue> Algues;
-    std::vector<Scavenger> Scavengers;
+    std::vector<Corail> coraux;
+    std::vector<Algue> algues;
+    std::vector<Scavenger> scavengers;
 
 public:
     std::vector<std::vector<double>> storeTokens(std::ifstream& file);
@@ -21,9 +21,8 @@ public:
 		std::vector<std::vector<double>> token_list, bool &cor, unsigned &seg_line, \
 		std::vector<double> line);
     bool scaVerifs(std::vector<double> line);
-    void test(const std::string& filename);
     bool readFile(const std::string &filename);
-    bool sauvegarde(bool success=true);
+    bool sauvegarde();
     bool idAlreadyExists(unsigned id);
     bool Collisions(Corail new_cor, Segment new_seg, bool reading);
 };
