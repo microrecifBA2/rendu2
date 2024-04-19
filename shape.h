@@ -3,6 +3,8 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
+#include "graphic.h"
+
 constexpr double epsil_zero(0.5) ;
 
 
@@ -41,6 +43,5 @@ double orientation(S2d p, S2d q, S2d r, bool reading);
 bool onSegment(S2d p, S2d q, S2d r, bool reading); 
 bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading);
 
-
-
+void draw_line(const int width, double x1, double y1, double x2, double y2, double R, double G, double B);
 #endif // SHAPE_H

@@ -44,6 +44,10 @@ double Lifeform::getAge() const {
     return age;
 }
 
+void Lifeform::incrementer() {
+    age++;
+}
+
 Corail::Corail(double x, double y, double age, unsigned id, bool statut_cor,
 				bool dir_rot, bool statut_dev, unsigned nbseg)
 :Lifeform({x, y}, age), id_cor(id), statut_cor(statut_cor), dir_rot(dir_rot),

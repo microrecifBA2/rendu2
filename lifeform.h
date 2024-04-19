@@ -9,18 +9,21 @@ class Lifeform {
 protected:
     S2d position;
     double age;
-    bool success; // Changer le type de Success en bool
+    bool success;
+    virtual void draw() = 0;
 
 public:
     Lifeform(S2d position, double age);
     S2d getPosition() const;
     double getAge() const;
-    bool lifeformSuccess() const; // Changer le type de retour en bool
+    void incrementer();
+    bool lifeformSuccess() const;
 };
 
 class Algue : public Lifeform { 
 public :
     Algue(double x, double y, double age);
+    void draw() override;
 };
 
 class Corail : public Lifeform {
@@ -41,7 +44,8 @@ public:
     unsigned getNbseg() const;
     unsigned getId() const;
     S2d getEnd() const;
-    std::vector<Segment> getSegments() const ;
+    std::vector<Segment> getSegments() const;
+    void draw() override;
 };
 
 class Scavenger : public Lifeform {
@@ -49,6 +53,7 @@ private:
     double rayon;
     bool statut;
     unsigned corail_id_cible;
+    void draw() override;
 
 public:
     Scavenger(double x, double y, double age, double radius, double status,

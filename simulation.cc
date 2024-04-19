@@ -9,6 +9,7 @@
 
 #include "message.h"
 #include "simulation.h"
+#include "constantes.h"
 
 using namespace std;
 
@@ -109,6 +110,9 @@ bool Simulation::readFile(const string& filename) {
     if ((!file.is_open()) or (file.fail())) { 
         success = false; 
     }
+
+    //e.seed(1);
+
     vector<vector<double>> token_list(storeTokens(file));
     enum current_type {ALGUES, CORAUX, SCAVENGERS};
     current_type curr(ALGUES);
@@ -156,9 +160,9 @@ bool Simulation::readFile(const string& filename) {
     return true;
 }
 
-bool Simulation::sauvegarde() {
+bool Simulation::sauvegarde(string nom_sauvegarde) {
     fstream fichier_sauvegarde;
-	fichier_sauvegarde.open("sauvegarde.txt", ios::out);
+	fichier_sauvegarde.open(nom_sauvegarde, ios::out);
     
     unsigned nb_alg(0), nb_cor(0), nb_sca(0);
     
@@ -197,6 +201,29 @@ bool Simulation::sauvegarde() {
 
     return 1;
 }
+
+// void Simulation::execution(bool naissance_alg, default_random_engine e) {
+//     for (auto alg = algues.begin(); alg != algues.end();) {
+//         alg->incrementer();
+//         if (alg->getAge() >= max_life_alg) {
+//             alg = algues.erase(alg);
+//         }
+//     }
+
+//     if (naissance_alg) {
+//         double p(alg_birth_rate);
+//         bernoulli_distribution b(p); 
+//         if (b(e)) {
+//             uniform_real_distribution<double> distribution(0.0, 256.0);
+//             default_random_engine generator;
+//             double random_x = distribution(generator);
+//             double random_y = distribution(generator);
+//             Algue algue(0, 0, 0);
+//             algues.push_back(algue);
+//         }
+//     }
+
+// }
 
 bool Simulation::idAlreadyExists(unsigned id) {
     for (const auto &corail : coraux) {

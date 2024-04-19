@@ -8,6 +8,8 @@
 #include <gtkmm/label.h>
 #include <gtkmm/checkbutton.h>
 
+#include "graphic_gui.h"
+
 class MyArea : public Gtk::DrawingArea
 {
 public:
@@ -16,10 +18,8 @@ public:
 	
 
 protected:
-//	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 
-private:
-	bool empty;
 };
 
 class MyEvent : public Gtk::Window

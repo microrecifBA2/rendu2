@@ -6,15 +6,23 @@
 
 constexpr unsigned taille_dessin(500);
 
-MyArea::MyArea(): empty(false)
-{
+MyArea::MyArea() {
 	set_content_width(taille_dessin);
 	set_content_height(taille_dessin);
-	
+	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
 }
 
 MyArea::~MyArea()
-{
+{}
+
+void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+	graphic_set_context(cr);
+	// coordinates for the center of the GTKmm window 
+	int xc, yc; 
+	xc = width / 2; 
+	yc = height / 2;
+
+	graphic_draw_line(10., 0., 0., 100., 100.);
 }
 
 
@@ -79,6 +87,7 @@ MyEvent::MyEvent():
 
 	m_Button_Step.signal_clicked().connect(
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_step));
+
 		
 }
 
