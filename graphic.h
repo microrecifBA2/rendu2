@@ -6,7 +6,8 @@ enum Color
     BLACK,
     RED,
     GREEN,
-    BLUE
+    BLUE,
+    GREY
 };
 
 void graphic_draw_line(int width, double x1, double y1, double x2, double y2, Color couleur);

@@ -18,8 +18,8 @@ struct Frame // Model Framing and window parameters
 	double yMin;
 	double yMax;
 	double asp;  // frame aspect ratio
-	int height;  // window height
-	int width;   // window width
+	double height;  // window height
+	double width;   // window width
 };
 
 class MyArea : public Gtk::DrawingArea {

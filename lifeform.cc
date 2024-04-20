@@ -49,7 +49,7 @@ Algue::Algue(double x, double y, double age)
 {}
 
 void Algue::draw() {
-    draw_circle(1., r_alg, getPosition().x, getPosition().y, GREEN);
+    draw_circle(1., r_alg, position.x, position.y, GREEN);
 }
 
 Corail::Corail(double x, double y, double age, unsigned id, bool statut_cor,
@@ -162,5 +162,5 @@ double Scavenger::getId() const {
 }
 
 void Scavenger::draw() {
-    draw_circle(1., getRadius(), getPosition().x, getPosition().y, RED);
+    draw_circle(1., rayon, position.x, position.y, RED);
 }

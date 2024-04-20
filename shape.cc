@@ -137,5 +137,5 @@ void draw_circle(int width, double radius, double x, double y, Color couleur) {
 }
 
 void draw_square(int width, double side, double x, double y, Color couleur) {
-    graphic_draw_circle(width, side, x, y , couleur);
+    graphic_draw_square(width, side, x, y , couleur);
 }

@@ -3,10 +3,12 @@
 #include <iostream>
 
 #include "gui.h"
+#include "constantes.h"
+
+
+static Frame default_frame = {0., dmax, 0., dmax, 1.0, dmax/2, dmax/2}; 
 
 constexpr unsigned taille_dessin(500);
-
-static Frame default_frame = {-150., 150., -100., 100., 1.5, taille_dessin, taille_dessin};
 
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
@@ -15,6 +17,7 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Fra
 MyArea::MyArea(Simulation* simulation)
 :simulation(simulation)
 {
+	setFrame(default_frame);
 	set_content_width(taille_dessin);
 	set_content_height(taille_dessin);
 	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
@@ -30,6 +33,8 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	draw_frame(cr, frame);              // drawing the drawingArea space
 	
 	orthographic_projection(cr, frame); // set the transformation MODELE to GTKmm
+
+	draw_square(1., dmax-1, dmax/2, dmax/2, GREY);
 
 	simulation->draw_algues();
 	simulation->draw_coraux();
@@ -107,6 +112,8 @@ MyEvent::MyEvent(Simulation simulation_):
 {
 	set_child(m_Main_Box);
 
+	set_title("Microrécif");
+
 	m_Main_Box.append(m_Interface_Box);
 	m_Main_Box.append(m_Area);
 	m_Interface_Box.append(m_Buttons_Box);
@@ -120,7 +127,6 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Buttons_Box.append(m_Button_Step);
 	m_Buttons_Box.append(m_CheckButton_Algues);
 
-
 	m_Infos_Box.append(m_Label_Infos);
 	m_Infos_Box.append(m_AlgCount_Box);
 	m_Infos_Box.append(m_CorCount_Box);
@@ -129,8 +135,9 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_AlgCount_Box.append(m_Label_Alg);
 	m_CorCount_Box.append(m_Label_Cor);
 	m_ScaCount_Box.append(m_Label_Sca);
-
 	
+	m_Area.set_expand();
+
 	m_Button_Exit.signal_clicked().connect(
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_exit));
 
@@ -209,9 +216,11 @@ static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
 	//display a rectangular frame around the drawing area
 	cr->set_line_width(10.0);
 	// draw greenish lines
-	cr->set_source_rgb(0., 0.7, 0.2);
+	cr->set_source_rgb(1., 1., 1.);
 	cr->rectangle(0,0, frame.width, frame.height);
 	cr->stroke();
+	cr->rectangle(0,0, frame.width, frame.height);
+	cr->fill();
 }
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
