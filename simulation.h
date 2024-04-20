@@ -28,7 +28,9 @@ public:
 //    void execution(bool naissance_alg);
     bool idAlreadyExists(unsigned id);
     bool Collisions(Corail new_cor, Segment new_seg, bool reading);
+    void draw_algues();
     void draw_coraux();
+    void draw_scavengers();
 };
 
 

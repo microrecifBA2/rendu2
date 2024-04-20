@@ -259,9 +259,21 @@ bool Simulation::Collisions(Corail new_cor, Segment new_seg, bool reading) {
     return true;
 }
 
+void Simulation::draw_algues() {
+    for(auto& algue: algues){
+        algue.draw();
+    }
+}
+
 void Simulation::draw_coraux() {
     for(auto& corail: coraux){
         corail.draw();
+    }
+}
+
+void Simulation::draw_scavengers() {
+    for(auto& sca: scavengers){
+        sca.draw();
     }
 }
 

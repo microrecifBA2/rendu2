@@ -11,6 +11,17 @@
 #include "graphic_gui.h"
 #include "simulation.h"
 
+struct Frame // Model Framing and window parameters
+{
+	double xMin; // frame parameters
+	double xMax;
+	double yMin;
+	double yMax;
+	double asp;  // frame aspect ratio
+	int height;  // window height
+	int width;   // window width
+};
+
 class MyArea : public Gtk::DrawingArea {
 public:
 	MyArea(Simulation* simulation);
@@ -20,14 +31,16 @@ public:
 protected:
 	Simulation* simulation;
 	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
-
+	void setFrame(Frame x); 
+    void adjustFrame(int width, int height);
+private:
+    Frame frame;
 };
 
 class MyEvent : public Gtk::Window {
 public:
 	MyEvent(Simulation simulation_);
 //	void on_key_press_event(GdkEventKey* event);
-
 protected:
 	Simulation simulation;
 	//Button Signal handlers:

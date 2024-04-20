@@ -128,6 +128,14 @@ bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading) {
 }
 
 
-void draw_line(const int width, double x1, double y1, double x2, double y2, Color couleur) {
+void draw_line(int width, double x1, double y1, double x2, double y2, Color couleur) {
     graphic_draw_line(width, x1, y1,  x2, y2, couleur);
+}
+
+void draw_circle(int width, double radius, double x, double y, Color couleur) {
+    graphic_draw_circle(width, radius, x, y , couleur);
+}
+
+void draw_square(int width, double side, double x, double y, Color couleur) {
+    graphic_draw_circle(width, side, x, y , couleur);
 }

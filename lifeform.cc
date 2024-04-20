@@ -28,14 +28,6 @@ Lifeform::Lifeform(S2d position, double age)
     }
 }
 
-bool Lifeform::lifeformSuccess() const {
-    return success;
-}
-
-Algue::Algue(double x, double y, double age)
-: Lifeform({x, y}, age)
-{}
-
 S2d Lifeform::getPosition() const {
     return position;
 }
@@ -46,6 +38,18 @@ double Lifeform::getAge() const {
 
 void Lifeform::incrementer() {
     age++;
+}
+
+bool Lifeform::lifeformSuccess() const {
+    return success;
+}
+
+Algue::Algue(double x, double y, double age)
+: Lifeform({x, y}, age)
+{}
+
+void Algue::draw() {
+    draw_circle(1., r_alg, getPosition().x, getPosition().y, GREEN);
 }
 
 Corail::Corail(double x, double y, double age, unsigned id, bool statut_cor,
@@ -121,13 +125,15 @@ vector<Segment> Corail::getSegments() const {
 }
 
 void Corail::draw() {
+    draw_square(1., d_cor, position.x, position.y, statut_cor? BLUE : BLACK);
+
     for (auto& segment: segments){
         double x1 = segment.getOrigin().x;
         double y1 = segment.getOrigin().y;
         double x2= segment.getEnd().x;
-        double y2 = segment.getEnd().x;
+        double y2 = segment.getEnd().y;
 
-        draw_line(5., x1, y1, x2, y2, statut_cor? BLUE : BLACK);
+        draw_line(1., x1, y1, x2, y2, statut_cor? BLUE : BLACK);
     }
 }
 
@@ -153,4 +159,8 @@ double Scavenger::getStatus() const {
 
 double Scavenger::getId() const {
     return corail_id_cible;
+}
+
+void Scavenger::draw() {
+    draw_circle(1., getRadius(), getPosition().x, getPosition().y, RED);
 }

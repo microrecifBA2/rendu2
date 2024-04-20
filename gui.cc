@@ -6,6 +6,12 @@
 
 constexpr unsigned taille_dessin(500);
 
+static Frame default_frame = {-150., 150., -100., 100., 1.5, taille_dessin, taille_dessin};
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
+
+
 MyArea::MyArea(Simulation* simulation)
 :simulation(simulation)
 {
@@ -19,12 +25,61 @@ MyArea::~MyArea()
 
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
 	graphic_set_context(cr);
-	// coordinates for the center of the GTKmm window 
-	int xc, yc; 
-	xc = width / 2; 
-	yc = height / 2;
 
+	adjustFrame(width, height);
+	draw_frame(cr, frame);              // drawing the drawingArea space
+	
+	orthographic_projection(cr, frame); // set the transformation MODELE to GTKmm
+
+	simulation->draw_algues();
 	simulation->draw_coraux();
+	simulation->draw_scavengers();
+
+}
+
+void MyArea::setFrame(Frame f)
+{
+	if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
+	{
+		f.asp = f.width/f.height;
+		frame = f;
+	}
+	else
+		std::cout << "incorrect Model framing or window parameters" << std::endl;
+} 
+
+void MyArea::adjustFrame(int width, int height)
+{
+	frame.width  = width;
+	frame.height = height;
+
+	// Preventing distorsion by adjusting the frame (cadrage)
+	// to have the same proportion as the graphical area
+	
+    // use the reference framing as a guide for preventing distortion
+    double new_aspect_ratio((double)width/height);
+    if( new_aspect_ratio > default_frame.asp)
+    { // keep yMax and yMin. Adjust xMax and xMin
+	    frame.yMax = default_frame.yMax ;
+	    frame.yMin = default_frame.yMin ;	
+	  
+	    double delta(default_frame.xMax - default_frame.xMin);
+	    double mid((default_frame.xMax + default_frame.xMin)/2);
+        // the new frame is centered on the mid-point along X
+	    frame.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+	    frame.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;		  	  
+    }
+    else
+    { // keep xMax and xMin. Adjust yMax and yMin
+	    frame.xMax = default_frame.xMax ;
+	    frame.xMin = default_frame.xMin ;
+	  	  
+ 	    double delta(default_frame.yMax - default_frame.yMin);
+	    double mid((default_frame.yMax + default_frame.yMin)/2);
+        // the new frame is centered on the mid-point along Y
+	    frame.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+	    frame.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;		  	  
+    }
 }
 
 
@@ -50,7 +105,6 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Label_Cor("coraux: "),
 	m_Label_Sca("charognards: ")
 {
-	set_resizable(false);
 	set_child(m_Main_Box);
 
 	m_Main_Box.append(m_Interface_Box);
@@ -147,4 +201,28 @@ void MyEvent::on_button_clicked_step() {
 	clic sur ce bouton produit UNE SEULE mise à jour de la simulation. Cela est simulé en faisant afficher une
 	seule incrémentation du compteur utilisé par le timer
 	*/
+}
+
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
+{
+	//display a rectangular frame around the drawing area
+	cr->set_line_width(10.0);
+	// draw greenish lines
+	cr->set_source_rgb(0., 0.7, 0.2);
+	cr->rectangle(0,0, frame.width, frame.height);
+	cr->stroke();
+}
+
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
+{
+	// déplace l'origine au centre de la fenêtre
+	cr->translate(frame.width/2, frame.height/2);
+  
+	// normalise la largeur et hauteur aux valeurs fournies par le cadrage
+	// ET inverse la direction de l'axe Y
+	cr->scale(frame.width/(frame.xMax - frame.xMin), -frame.height/(frame.yMax - frame.yMin));
+  
+	// décalage au centre du cadrage
+	cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
 }

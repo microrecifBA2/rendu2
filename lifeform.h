@@ -17,11 +17,13 @@ public:
     double getAge() const;
     void incrementer();
     bool lifeformSuccess() const;
+    virtual void draw() = 0;
 };
 
 class Algue : public Lifeform { 
 public :
     Algue(double x, double y, double age);
+    void draw();
 };
 
 class Corail : public Lifeform {
@@ -45,7 +47,6 @@ public:
     bool getStatut_dev() const;
     unsigned getNbseg() const;
     S2d getEnd() const;
-
     std::vector<Segment> getSegments() const;
     void draw();
 };
@@ -62,6 +63,7 @@ public:
     double getRadius() const;
     double getStatus() const;
     double getId() const;
+    void draw();
 };
 
 #endif // LIFEFORM_H
