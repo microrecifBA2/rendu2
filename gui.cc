@@ -155,7 +155,7 @@ MyEvent::MyEvent(Simulation simulation_):
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_step));
 
 	auto controller = Gtk::EventControllerKey::create();
-    controller->signal_key_pressed().connect(sigc::mem_fun(*this, &MyEvent::on_key_press_event), false);
+    controller->signal_key_pressed().connect(sigc::bind<0, 1, 2>(sigc::mem_fun(*this, &MyEvent::on_key_press_event), keyval_param, keycode_param, state_param), false);
     add_controller(controller);
 }
 
