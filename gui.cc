@@ -157,6 +157,7 @@ MyEvent::MyEvent(Simulation simulation_):
 	auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(sigc::mem_fun(*this, &MyEvent::on_key_press_event), false);
     add_controller(controller);
+}
 
 void MyEvent::on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state) {
 	switch (keyval) {
