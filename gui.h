@@ -51,7 +51,8 @@ protected:
 	void on_button_clicked_save();
 	void on_button_clicked_start();
 	void on_button_clicked_step();
-	void on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state);
+	void on_check_button_toggled();
+	bool on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state);
 	void on_file_dialog_response(int button_type, Gtk::FileChooserDialog* dialog);
 	bool on_timeout();
 
