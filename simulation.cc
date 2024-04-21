@@ -13,6 +13,8 @@
 
 using namespace std;
 
+static default_random_engine e;
+
 vector<vector<double>> Simulation::storeTokens(ifstream& file) {
 
     string line;
@@ -51,7 +53,6 @@ bool Simulation::corVerifs(unsigned& beg_data_entity, \
 
         Corail corail(line[0], line[1], line[2], line[3], line[4], line[5], \
             line[6], line[7]);
-        
         if (!corail.lifeformSuccess()) {return false;}
 
         coraux.push_back(corail);
@@ -67,6 +68,8 @@ bool Simulation::corVerifs(unsigned& beg_data_entity, \
         cur_cor->addSegment(cur_seg, true);
         cur_cor->Superposition();
         if (Collisions(*cur_cor, cur_seg, true) == false) {return false;}
+
+        if (!cur_cor->lifeformSuccess()) {return false;}
 
         ++seg_line;
         if (seg_line == cur_cor->getNbseg()) {               
@@ -93,6 +96,7 @@ bool Simulation::scaVerifs(vector<double> line) {
     }
     else {
         Scavenger scavenger(line[0], line[1], line[2], line[3], line[4]);
+        if (!scavenger.lifeformSuccess()) {return false;}
         scavengers.push_back(scavenger);
     }
     return true;
@@ -103,15 +107,15 @@ bool Simulation::readFile(const string& filename) {
     coraux.clear();
     algues.clear();
     scavengers.clear();
-
-    bool success(true);
     
     ifstream file(filename);
     if ((!file.is_open()) or (file.fail())) { 
-        success = false; 
+        sim_success = false; 
     }
 
-    //e.seed(1);
+    e.seed(1);
+    double p(alg_birth_rate);
+    bernoulli_distribution b(p); 
 
     vector<vector<double>> token_list(storeTokens(file));
     enum current_type {ALGUES, CORAUX, SCAVENGERS};
@@ -125,17 +129,26 @@ bool Simulation::readFile(const string& filename) {
         if ((curr == ALGUES) && (line_idx >= beg_data_entity) &&
             (line_idx <= end_data_entity)){
             Algue algue(line[0], line[1], line[2]);
-            if (!algue.lifeformSuccess()) {success = false;}
+            if (!algue.lifeformSuccess()) {
+                sim_success = false; 
+                break;
+            }
             algues.push_back(algue);
         }
         else if ((curr == CORAUX) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
             if (corVerifs(beg_data_entity, end_data_entity, token_list, cor, \
-			seg_line, line) == false) {success = false;}
+			seg_line, line) == false) {
+                sim_success = false;
+                break;
+            }
         }
         else if ((curr == SCAVENGERS) && (line_idx >= beg_data_entity) && \
 			(line_idx <= end_data_entity)) {
-            if (scaVerifs(line) == false) {success = false;};
+            if (scaVerifs(line) == false) {
+                sim_success = false; 
+                break;
+            }
         }
         if (line_idx == end_data_entity) {
             if (curr == ALGUES) {curr = CORAUX;}
@@ -147,15 +160,18 @@ bool Simulation::readFile(const string& filename) {
         line_idx++;
     }
 
-    if (success == false) {
+    execution(b, true);
+    execution(b, true);
+
+    file.close();
+    
+    if (sim_success == false) {
         coraux.clear();
         algues.clear();
         scavengers.clear();
 
         return false;
     }
-    
-    file.close();
     cout << message::success();
     return true;
 }
@@ -172,26 +188,19 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
 
     fichier_sauvegarde << to_string(nb_alg) << endl;
     for(auto& algue: algues) {
-        fichier_sauvegarde << "\t" << to_string(algue.getPosition().x) << " " << to_string(algue.getPosition().y) << " " << to_string(algue.getAge()) << endl;
+        algue.save(fichier_sauvegarde);
     }
 
     fichier_sauvegarde << endl << to_string(nb_cor) << endl;
     
     for(auto& corail: coraux) {
-        fichier_sauvegarde << "\t" << corail.getPosition() << " " << to_string(corail.getAge()) << " " << to_string(corail.getId()) << " " << to_string(corail.getStatut_cor()) << " " << to_string(corail.getDir_rot()) << " " << to_string(corail.getStatut_dev()) << " " << to_string(corail.getNbseg()) << endl;
-        for (auto& segment: corail.getSegments()) {
-            fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
-        }
+        corail.save(fichier_sauvegarde);
     }
 
     fichier_sauvegarde << endl << to_string(nb_sca) << endl;
 
     for(auto& sca: scavengers) {
-        fichier_sauvegarde << "\t" << sca.getPosition() << " " << to_string(sca.getAge()) << " " << to_string(sca.getRadius()) << " " << to_string(sca.getStatus());
-        if (sca.getStatus() != 0) {
-                fichier_sauvegarde << " " << to_string(sca.getId());
-        }
-        fichier_sauvegarde << endl;
+        sca.save(fichier_sauvegarde);
     }
 
 	if (fichier_sauvegarde) {
@@ -202,28 +211,27 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
     return 1;
 }
 
-// void Simulation::execution(bool naissance_alg) {
-//     for (auto alg = algues.begin(); alg != algues.end();) {
-//         alg->incrementer();
-//         if (alg->getAge() >= max_life_alg) {
-//             alg = algues.erase(alg);
-//         }
-//     }
+void Simulation::execution(bernoulli_distribution b, bool naissance_alg) {
+    uniform_int_distribution<int> distribution(0, 255);
+    
+    for (auto& alg : algues) {
+        alg.incrementer();
+        if (alg.getAge() >= max_life_alg) {
+            swap(alg, algues.back());
+            algues.pop_back();
+        }
+    }
 
-//     if (naissance_alg) {
-//         double p(alg_birth_rate);
-//         bernoulli_distribution b(p); 
-//         if (b(e)) {
-//             uniform_real_distribution<double> distribution(0.0, 256.0);
-//             default_random_engine generator;
-//             double random_x = distribution(generator);
-//             double random_y = distribution(generator);
-//             Algue algue(0, 0, 0);
-//             algues.push_back(algue);
-//         }
-//     }
+    if (naissance_alg) {
+        if (b(e)) {
+            double random_x = distribution(generator);
+            double random_y = distribution(generator);
+            Algue algue(random_x, random_y, 1);
+            algues.push_back(algue);
+        }
+    }
 
-// }
+}
 
 bool Simulation::idAlreadyExists(unsigned id) {
     for (const auto &corail : coraux) {
@@ -275,9 +283,4 @@ void Simulation::draw_scavengers() {
     for(auto& sca: scavengers){
         sca.draw();
     }
-}
-
-ostream& operator<<(ostream& sortie, S2d const& point) {
-    sortie << to_string(point.x) << " " << to_string(point.y );
-    return sortie;
 }

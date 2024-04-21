@@ -7,9 +7,12 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/label.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm.h>
 
 #include "graphic_gui.h"
 #include "simulation.h"
+
+constexpr unsigned taille_dessin(500);
 
 struct Frame // Model Framing and window parameters
 {
@@ -40,7 +43,6 @@ private:
 class MyEvent : public Gtk::Window {
 public:
 	MyEvent(Simulation simulation_);
-//	void on_key_press_event(GdkEventKey* event);
 protected:
 	Simulation simulation;
 	//Button Signal handlers:
@@ -49,6 +51,14 @@ protected:
 	void on_button_clicked_save();
 	void on_button_clicked_start();
 	void on_button_clicked_step();
+	void on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state);
+	void on_file_dialog_response(int button_type, Gtk::FileChooserDialog* dialog);
+	bool on_timeout();
+
+	bool started = false;
+	bool timer_added;
+	bool disconnect;
+	const int timeout_value = 25;	
 
 	MyArea m_Area;
 
@@ -68,9 +78,11 @@ protected:
 	Gtk::Box m_AlgCount_Box;
 	Gtk::Box m_CorCount_Box;
 	Gtk::Box m_ScaCount_Box;
+	Gtk::Label m_Label_NbMaj;
 	Gtk::Label m_Label_Alg;
 	Gtk::Label m_Label_Cor;
 	Gtk::Label m_Label_Sca;
+	Gtk::Label timer_data;
 };
 
 #endif // GUI_H

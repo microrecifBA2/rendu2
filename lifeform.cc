@@ -20,11 +20,13 @@ Lifeform::Lifeform(S2d position, double age)
     {
         cout << message::lifeform_center_outside(position.x, position.y);
         success = false;
+        return;
     }
 
     if (age <= 0) {
         cout << message::lifeform_age(age);
         success = false;
+        return;
     }
 }
 
@@ -44,6 +46,10 @@ bool Lifeform::lifeformSuccess() const {
     return success;
 }
 
+void Lifeform::save(fstream& fichier_sauvegarde) {
+    fichier_sauvegarde << "\t" << position << " " << to_string(age) << endl;
+}
+
 Algue::Algue(double x, double y, double age)
 : Lifeform({x, y}, age)
 {}
@@ -61,37 +67,44 @@ nbseg(nbseg)
 }
 
 void Corail::addSegment(Segment seg, bool reading) {
-    double epsil = reading ? 0. : epsil_zero;
-    double length(seg.getLength()), angle(seg.getAngle());
+    if (success) {
+        double epsil = reading ? 0. : epsil_zero;
+        double length(seg.getLength()), angle(seg.getAngle());
 
-    if (seg.is_length_outside() or \
-    !((length >= l_repro - l_seg_interne) && (length < l_repro))) {
-        cout << message::segment_length_outside(id_cor, length);
-        success = false;
-    }
-
-    if (seg.is_angle_outside()) {
-        cout << message::segment_angle_outside(id_cor, angle);
-        success = false;
-    }
-
-    end = seg.getEnd();
-
-    if (!((end.x > epsil) && (end.x < dmax - epsil) && (end.y > epsil) && \
-		(end.y < dmax - epsil))) {
-            cout << message::lifeform_computed_outside(id_cor, end.x, end.y);
+        if (seg.is_length_outside() or \
+        !((length >= l_repro - l_seg_interne) && (length < l_repro))) {
+            cout << message::segment_length_outside(id_cor, length);
             success = false;
-    }
+            return;
+        }
 
-    segments.push_back(seg);
+        if (seg.is_angle_outside()) {
+            cout << message::segment_angle_outside(id_cor, angle);
+            success = false;
+            return;
+        }
+
+        end = seg.getEnd();
+
+        if (!((end.x > epsil) && (end.x < dmax - epsil) && (end.y > epsil) && \
+            (end.y < dmax - epsil))) {
+                cout << message::lifeform_computed_outside(id_cor, end.x, end.y);
+                success = false;
+                return;
+        }
+
+        segments.push_back(seg);
+    }
 }
 
 void Corail::Superposition() {
-    for (unsigned i(0); i < segments.size() - 1; i++)
-    {
-        if (angleDev(segments[i], segments[i+1]) == 0.) {
-            cout << message::segment_superposition(id_cor, i, i + 1);
-            success = false;
+    if (success) {
+        for (unsigned i(0); i < segments.size() - 1; i++) {
+            if (angleDev(segments[i], segments[i+1]) == 0.) {
+                cout << message::segment_superposition(id_cor, i, i + 1);
+                success = false;
+                return;
+            }
         }
     }
 }
@@ -137,15 +150,25 @@ void Corail::draw() {
     }
 }
 
+void Corail::save(fstream& fichier_sauvegarde) {
+    Lifeform::save(fichier_sauvegarde);
+    fichier_sauvegarde << to_string(id_cor) << " " << to_string(statut_cor) << " " << to_string(dir_rot) << " " << to_string(statut_dev) << " " << to_string(nbseg) << endl;
+        for (auto& segment: segments) {
+            fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
+        }
+}
+
 Scavenger::Scavenger(double x, double y, double age, double rayon, double status,
 	int corail_id_cible)
 :Lifeform({x, y}, age), rayon(rayon), statut(status),
 	corail_id_cible(corail_id_cible)
 {
-    if (!((rayon >= r_sca) && (rayon < r_sca_repro)))
-    {
-        cout << message::scavenger_radius_outside(static_cast<unsigned int>(rayon));
-        success = false;
+    if (success) {
+        if (!((rayon >= r_sca) && (rayon < r_sca_repro))) {
+            cout << message::scavenger_radius_outside(static_cast<unsigned int>(rayon));
+            success = false;
+            return;
+        }
     }
 }
 
@@ -163,4 +186,18 @@ double Scavenger::getId() const {
 
 void Scavenger::draw() {
     draw_circle(1., rayon, position.x, position.y, RED);
+}
+
+void Scavenger::save(fstream& fichier_sauvegarde) {
+    Lifeform::save(fichier_sauvegarde);
+    fichier_sauvegarde << " " << to_string(rayon) << " " << to_string(statut);
+        if (statut != 0) {
+                fichier_sauvegarde << " " << to_string(corail_id_cible);
+        }
+        fichier_sauvegarde << endl;
+}
+
+ostream& operator<<(ostream& sortie, S2d const& point) {
+    sortie << to_string(point.x) << " " << to_string(point.y );
+    return sortie;
 }

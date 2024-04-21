@@ -7,19 +7,16 @@
 #include "gui.h"
 #include "simulation.h"
 
-using namespace std;
-
 int main(int argc, char* argv[]) {
     
     if (argc > 2) {
         exit(EXIT_FAILURE);
     }
-    string filename = argv[1];
+    std::string filename = argv[1];
 
     Simulation simulation;
 
     simulation.readFile(filename);
-    simulation.sauvegarde();
 
     auto app = Gtk::Application::create();
 

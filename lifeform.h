@@ -4,6 +4,7 @@
 #define LIFEFORM_H
 
 #include <vector>
+#include <fstream>
 
 class Lifeform {
 protected:
@@ -18,6 +19,7 @@ public:
     void incrementer();
     bool lifeformSuccess() const;
     virtual void draw() = 0;
+    virtual void save(std::fstream& fichier_sauvegarde);
 };
 
 class Algue : public Lifeform { 
@@ -48,7 +50,8 @@ public:
     unsigned getNbseg() const;
     S2d getEnd() const;
     std::vector<Segment> getSegments() const;
-    void draw();
+    void draw() override;
+    void save(std::fstream& fichier_sauvegarde) override;
 };
 
 class Scavenger : public Lifeform {
@@ -63,7 +66,10 @@ public:
     double getRadius() const;
     double getStatus() const;
     double getId() const;
-    void draw();
+    void draw() override;
+    void save(std::fstream& fichier_sauvegarde) override;
 };
+
+std::ostream& operator<<(std::ostream& sortie, S2d const& point);
 
 #endif // LIFEFORM_H

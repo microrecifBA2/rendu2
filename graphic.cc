@@ -6,8 +6,8 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr) {
     ptcr = &cr;
 }
 
-void graphic_draw_line(int width, double x1, double y1, double x2, double y2, Color couleur) { 
-    (*ptcr)->set_line_width(width);
+void graphic_draw_line(int width_line, double x1, double y1, double x2, double y2, Color couleur) { 
+    (*ptcr)->set_line_width(width_line);
 
     switch (couleur) {
     case GREY:
@@ -23,8 +23,8 @@ void graphic_draw_line(int width, double x1, double y1, double x2, double y2, Co
 }
 
 
-void graphic_draw_circle(int width, double radius, double x, double y, Color couleur) {
-    (*ptcr)->set_line_width(width);
+void graphic_draw_circle(int width_line, double radius, double x, double y, Color couleur) {
+    (*ptcr)->set_line_width(width_line);
 
     switch (couleur) {
     case BLUE:
@@ -39,8 +39,8 @@ void graphic_draw_circle(int width, double radius, double x, double y, Color cou
 }
 
 
-void graphic_draw_square(int width, double side, double x, double y, Color couleur) {
-    (*ptcr)->set_line_width(width);
+void graphic_draw_square(int width_line, double side, double x, double y, Color couleur) {
+    (*ptcr)->set_line_width(width_line);
 
     switch (couleur) {
     case GREEN:

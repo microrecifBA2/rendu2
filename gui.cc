@@ -7,13 +7,8 @@
 
 
 static Frame default_frame = {0., dmax, 0., dmax, 1.0, dmax/2, dmax/2}; 
-
-constexpr unsigned taille_dessin(500);
-
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
-
-
 MyArea::MyArea(Simulation* simulation)
 :simulation(simulation)
 {
@@ -103,12 +98,15 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Button_Step("step"),
 	m_CheckButton_Algues("Naissance d'algues"),
 	m_Label_Infos("Info : nombre de ..."),
+	m_maj_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_AlgCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_CorCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_ScaCount_Box(Gtk::Orientation::HORIZONTAL, 2),
+	m_Label_NbMaj("mise à jour: "),
 	m_Label_Alg("algues: "),
 	m_Label_Cor("coraux: "),
-	m_Label_Sca("charognards: ")
+	m_Label_Sca("charognards: "),
+	timer_data("0")
 {
 	set_child(m_Main_Box);
 
@@ -128,10 +126,13 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Buttons_Box.append(m_CheckButton_Algues);
 
 	m_Infos_Box.append(m_Label_Infos);
+	m_Infos_Box.append(m_maj_Box);
 	m_Infos_Box.append(m_AlgCount_Box);
 	m_Infos_Box.append(m_CorCount_Box);
 	m_Infos_Box.append(m_ScaCount_Box);
 
+	m_maj_Box.append(m_Label_NbMaj);
+	m_maj_Box.append(timer_data);
 	m_AlgCount_Box.append(m_Label_Alg);
 	m_CorCount_Box.append(m_Label_Cor);
 	m_ScaCount_Box.append(m_Label_Sca);
@@ -153,78 +154,142 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Button_Step.signal_clicked().connect(
 		sigc::mem_fun(*this, &MyEvent::on_button_clicked_step));
 
-	//signal_key_press_event().connect(sigc::mem_fun(*this, &MyArea::on_key_press_event));
-}
+	auto controller = Gtk::EventControllerKey::create();
+    controller->signal_key_pressed().connect(sigc::mem_fun(*this, &MyEvent::on_key_press_event), false);
+    add_controller(controller);
 
-/*void MyEvent::on_key_press_event(GdkEventKey* event) {
-	if (event->keyval == GDK_KEY_s) {
-		myEvent.on_button_clicked_start();
+void MyEvent::on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state) {
+	switch (keyval) {
+	case GDK_KEY_s:
+		on_button_clicked_start();
+		break;
+	case GDK_KEY_1:
+		on_button_clicked_step();
+		break;
 	}
-	else if (event->keyval == GDK_KEY_1) {
-		myEvent.on_button_clicked_step();
-	}
-}*/
+}
 
 void MyEvent::on_button_clicked_exit() {
 	exit(EXIT_SUCCESS);
 }
 
 void MyEvent::on_button_clicked_open() {
-	//on_file_dialog_response(response_id=1);
-	// lire un fichier avec GTKmm pour initialiser une simulation avec detection d’erreur
+	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
+		  Gtk::FileChooser::Action::OPEN);
+
+	dialog->set_transient_for(*this);
+	dialog->set_modal(true);
+	dialog->signal_response().connect(sigc::bind(
+	sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+	
+	//Add response buttons to the dialog:
+	dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
+	dialog->add_button("_Open", Gtk::ResponseType::OK);
+	
+	//Add filters, so that only certain file types can be selected:
+	
+	auto filter_text = Gtk::FileFilter::create();
+	filter_text->set_name("Text files");
+	filter_text->add_mime_type("text/plain");
+	dialog->add_filter(filter_text);
+
+	dialog->show();
+	
 	
 }
 
 void MyEvent::on_button_clicked_save() {
-	// sauvegarder l’état courant de la simulation (éventuellement vide) dans un fichier dont le nom
-	// est fourni à GTKmm
+	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
+		  Gtk::FileChooser::Action::SAVE);
+
+	dialog->set_transient_for(*this);
+	dialog->set_modal(true);
+	dialog->signal_response().connect(sigc::bind(
+	sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+	
+	//Add response buttons to the dialog:
+	dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
+	dialog->add_button("_Save", Gtk::ResponseType::OK);
+	
+	//Add filters, so that only certain file types can be selected:
+	
+	auto filter_text = Gtk::FileFilter::create();
+	filter_text->set_name("Text files");
+	filter_text->add_mime_type("text/plain");
+	dialog->add_filter(filter_text);
+
+	dialog->show();
 }
 
 void MyEvent::on_button_clicked_start() {
-	/*if (started == true) {
-		started = false;
-		m_Button_Start.set_label("start");
-	}
-	else {
+	if (started == false) {
 		started = true;
 		m_Button_Start.set_label("stop");
+		if(not timer_added) {
+			sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
+													&MyEvent::on_timeout));
+			
+			auto conn = Glib::signal_timeout().connect(my_slot,timeout_value);
+				
+			timer_added = true;
+		}
 	}
-	// déclenché avec bouton start ou touche "s"
 
-	/* le label du bouton devient “stop” et un timer est lancé qui produit l’affichage d’un compteur
-	entier qui progresse d’une unité à chaque execution du signal handler du timer. Cela permet de simuler
-	l’appel d’une mise à jour de la simulation. Si on re-clique sur le bouton (qui maintenant affiche “stop”)
-	alors le timer s’arrête et le label redevient “start” */
+	else {
+		started = false;
+		m_Button_Start.set_label("start");
+
+		if (timer_added) {
+			disconnect  = true;   
+			timer_added = false;
+		}
+	}
 }
 
 void MyEvent::on_button_clicked_step() {
-	//step = true;
+	if (!started) {
+		on_timeout();
+	}
+}
 
-	// déclenché avec bouton step ou touche "1"
+bool MyEvent::on_timeout()
+{
+	static unsigned int val(1);
+	if(disconnect){
+		disconnect = false;
+		return false;
+	}
+	
+	timer_data.set_text(std::to_string(val));
 
-	/*
-	 l’action de ce bouton est seulement prise en compte quand la simulation n’est pas en cours
-	d’exécution (c’est à dire quand on voit le label “start” au-dessus du bouton “step”). Dans ce contexte, un
-	clic sur ce bouton produit UNE SEULE mise à jour de la simulation. Cela est simulé en faisant afficher une
-	seule incrémentation du compteur utilisé par le timer
-	*/
+	++val;
+	return true; 
+}
+
+void MyEvent::on_file_dialog_response (int response_id, Gtk::FileChooserDialog* dialog) {
+	if (response_id == Gtk::ResponseType::OK) {
+		auto filename = dialog->get_file()->get_path();
+		
+		Gtk::FileChooser::Action action = dialog->get_action();
+		if (action == Gtk::FileChooser::Action::OPEN) {
+			simulation.readFile(filename);
+		}
+		else if (action == Gtk::FileChooser::Action::SAVE) {
+			simulation.sauvegarde(filename);
+		}
+	}
+	delete dialog;
 }
 
 
-static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{
-	//display a rectangular frame around the drawing area
-	cr->set_line_width(10.0);
-	// draw greenish lines
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
 	cr->set_source_rgb(1., 1., 1.);
-	cr->rectangle(0,0, frame.width, frame.height);
-	cr->stroke();
 	cr->rectangle(0,0, frame.width, frame.height);
 	cr->fill();
 }
 
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
 	// déplace l'origine au centre de la fenêtre
 	cr->translate(frame.width/2, frame.height/2);
   

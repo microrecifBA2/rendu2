@@ -43,7 +43,7 @@ double orientation(S2d p, S2d q, S2d r, bool reading);
 bool onSegment(S2d p, S2d q, S2d r, bool reading); 
 bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading);
 
-void draw_line(int width, double x1, double y1, double x2, double y2, Color couleur);
+void draw_line(int width_line, double x1, double y1, double x2, double y2, Color couleur);
 void draw_circle(int width_line, double radius, double x, double y, Color couleur);
 void draw_square(int width_line, double side, double x, double y, Color couleur);
 #endif // SHAPE_H
