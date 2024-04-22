@@ -265,17 +265,6 @@ void MyEvent::on_check_button_toggled() {
     }
 }
 
-void MyEvent::on_check_button_toggled() {
-	if (m_CheckButton_Algues.get_active()) {
-        simulation.naissance_alg = true;
-    } else {
-        simulation.naissance_alg = false;
-    }
-}
-
-void MyEvent::on_check_button_toggled() {
-	
-}
 
 bool MyEvent::on_timeout()
 {
