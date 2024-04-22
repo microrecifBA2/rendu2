@@ -106,7 +106,10 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Label_Alg("algues: "),
 	m_Label_Cor("coraux: "),
 	m_Label_Sca("charognards: "),
-	timer_data("0")
+	timer_data("0"),
+	nb_alg(std::to_string(simulation.nb_alg())),
+	nb_cor(std::to_string(simulation.nb_cor())),
+	nb_sca(std::to_string(simulation.nb_sca()))
 {
 	set_child(m_Main_Box);
 
@@ -134,8 +137,11 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_maj_Box.append(m_Label_NbMaj);
 	m_maj_Box.append(timer_data);
 	m_AlgCount_Box.append(m_Label_Alg);
+	m_AlgCount_Box.append(nb_alg);
 	m_CorCount_Box.append(m_Label_Cor);
+	m_CorCount_Box.append(nb_cor);
 	m_ScaCount_Box.append(m_Label_Sca);
+	m_ScaCount_Box.append(nb_sca);
 	
 	m_Area.set_expand();
 

@@ -84,6 +84,9 @@ protected:
 	Gtk::Label m_Label_Cor;
 	Gtk::Label m_Label_Sca;
 	Gtk::Label timer_data;
+	Gtk::Label nb_alg;
+	Gtk::Label nb_cor;
+	Gtk::Label nb_sca;
 };
 
 #endif // GUI_H

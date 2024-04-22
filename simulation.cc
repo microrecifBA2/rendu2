@@ -283,3 +283,15 @@ void Simulation::draw_scavengers() {
         sca.draw();
     }
 }
+
+int Simulation::nb_alg() const{
+    return algues.size();
+}
+
+int Simulation::nb_cor() const{
+    return coraux.size();
+}
+
+int Simulation::nb_sca() const{
+    return scavengers.size();
+}

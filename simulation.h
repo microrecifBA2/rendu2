@@ -33,6 +33,9 @@ public:
     void draw_algues();
     void draw_coraux();
     void draw_scavengers();
+    int nb_alg() const;
+    int nb_cor() const;
+    int nb_sca() const;
 };
 
 
