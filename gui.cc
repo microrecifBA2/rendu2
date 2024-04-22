@@ -283,7 +283,11 @@ bool MyEvent::on_timeout()
 	timer_data.set_text(std::to_string(val));
 
 	++val;
+
 	simulation.execution();
+	nb_alg.set_text(std::to_string(simulation.nb_alg()));
+	nb_alg.set_text(std::to_string(simulation.nb_cor()));
+	nb_alg.set_text(std::to_string(simulation.nb_sca()));
 	return true; 
 }
 
