@@ -35,6 +35,7 @@ void graphic_draw_circle(int width_line, double radius, double x, double y, Colo
     }
 
     (*ptcr)->arc(x, y, radius, 0., 2.0 * M_PI);
+    (*ptcr)->stroke();
 
 }
 

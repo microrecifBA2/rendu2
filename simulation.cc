@@ -114,8 +114,6 @@ bool Simulation::readFile(const string& filename) {
     }
 
     e.seed(1);
-    double p(alg_birth_rate);
-    bernoulli_distribution b(p); 
 
     vector<vector<double>> token_list(storeTokens(file));
     enum current_type {ALGUES, CORAUX, SCAVENGERS};
@@ -160,9 +158,6 @@ bool Simulation::readFile(const string& filename) {
         line_idx++;
     }
 
-    execution(b, true);
-    execution(b, true);
-
     file.close();
     
     if (sim_success == false) {
@@ -173,6 +168,10 @@ bool Simulation::readFile(const string& filename) {
         return false;
     }
     cout << message::success();
+
+    /*while (true) {
+        execution(b, true);
+    }*/
     return true;
 }
 
@@ -211,9 +210,9 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
     return 1;
 }
 
-void Simulation::execution(bernoulli_distribution b, bool naissance_alg) {
-    uniform_int_distribution<int> distribution(0, 255);
-    
+void Simulation::execution() {
+    bernoulli_distribution b(alg_birth_rate);
+    uniform_int_distribution<int> distribution(1, dmax-1);
     for (auto& alg : algues) {
         alg.incrementer();
         if (alg.getAge() >= max_life_alg) {

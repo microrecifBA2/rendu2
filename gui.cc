@@ -158,7 +158,7 @@ MyEvent::MyEvent(Simulation simulation_):
 		sigc::mem_fun(*this, &MyEvent::on_check_button_toggled));
 
 	auto controller = Gtk::EventControllerKey::create();
-    controller->signal_key_pressed().connect(sigc::bind<0, 1, 2>(sigc::mem_fun(*this, &MyEvent::on_key_press_event), keyval_param, keycode_param, state_param), false);
+	controller->signal_key_pressed().connect(sigc::mem_fun(*this, &MyEvent::on_key_press_event), false);
     add_controller(controller);
 }
 
@@ -258,6 +258,22 @@ void MyEvent::on_button_clicked_step() {
 }
 
 void MyEvent::on_check_button_toggled() {
+	if (m_CheckButton_Algues.get_active()) {
+        simulation.naissance_alg = true;
+    } else {
+        simulation.naissance_alg = false;
+    }
+}
+
+void MyEvent::on_check_button_toggled() {
+	if (m_CheckButton_Algues.get_active()) {
+        simulation.naissance_alg = true;
+    } else {
+        simulation.naissance_alg = false;
+    }
+}
+
+void MyEvent::on_check_button_toggled() {
 	
 }
 
@@ -272,6 +288,7 @@ bool MyEvent::on_timeout()
 	timer_data.set_text(std::to_string(val));
 
 	++val;
+	simulation.execution();
 	return true; 
 }
 
