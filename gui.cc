@@ -288,6 +288,8 @@ bool MyEvent::on_timeout()
 	nb_alg.set_text(std::to_string(simulation.nb_alg()));
 	nb_alg.set_text(std::to_string(simulation.nb_cor()));
 	nb_alg.set_text(std::to_string(simulation.nb_sca()));
+
+	queue_draw();
 	return true; 
 }
 
