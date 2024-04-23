@@ -286,10 +286,10 @@ bool MyEvent::on_timeout()
 
 	simulation.execution();
 	nb_alg.set_text(std::to_string(simulation.nb_alg()));
-	nb_alg.set_text(std::to_string(simulation.nb_cor()));
-	nb_alg.set_text(std::to_string(simulation.nb_sca()));
+	nb_cor.set_text(std::to_string(simulation.nb_cor()));
+	nb_sca.set_text(std::to_string(simulation.nb_sca()));
 
-	queue_draw();
+	m_Area.queue_draw();
 	return true; 
 }
 
@@ -300,6 +300,7 @@ void MyEvent::on_file_dialog_response (int response_id, Gtk::FileChooserDialog* 
 		Gtk::FileChooser::Action action = dialog->get_action();
 		if (action == Gtk::FileChooser::Action::OPEN) {
 			simulation.readFile(filename);
+			m_Area.queue_draw();
 		}
 		else if (action == Gtk::FileChooser::Action::SAVE) {
 			simulation.sauvegarde(filename);
