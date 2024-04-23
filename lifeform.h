@@ -18,7 +18,6 @@ public:
     double getAge() const;
     void incrementer();
     bool lifeformSuccess() const;
-    virtual void draw() = 0;
     virtual void save(std::fstream& fichier_sauvegarde);
 };
 
@@ -50,7 +49,7 @@ public:
     unsigned getNbseg() const;
     S2d getEnd() const;
     std::vector<Segment> getSegments() const;
-    void draw() override;
+    void draw();
     void save(std::fstream& fichier_sauvegarde) override;
 };
 
@@ -66,7 +65,7 @@ public:
     double getRadius() const;
     double getStatus() const;
     double getId() const;
-    void draw() override;
+    void draw();
     void save(std::fstream& fichier_sauvegarde) override;
 };
 

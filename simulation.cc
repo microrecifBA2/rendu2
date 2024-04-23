@@ -169,9 +169,6 @@ bool Simulation::readFile(const string& filename) {
     }
     cout << message::success();
 
-    /*while (true) {
-        execution(b, true);
-    }*/
     return true;
 }
 

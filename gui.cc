@@ -25,11 +25,9 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	graphic_set_context(cr);
 
 	adjustFrame(width, height);
-	draw_frame(cr, frame);              // drawing the drawingArea space
-	
 	orthographic_projection(cr, frame); // set the transformation MODELE to GTKmm
 
-	draw_square(1., dmax-1, dmax/2, dmax/2, GREY);
+	draw_frame(cr, frame); 
 
 	simulation->draw_algues();
 	simulation->draw_coraux();
@@ -238,7 +236,7 @@ void MyEvent::on_button_clicked_start() {
 		m_Button_Start.set_label("stop");
 		if(not timer_added) {
 			sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
-													&MyEvent::on_timeout));
+													&MyEvent::on_timeout),false);
 			
 			auto conn = Glib::signal_timeout().connect(my_slot,timeout_value);
 				
@@ -259,7 +257,7 @@ void MyEvent::on_button_clicked_start() {
 
 void MyEvent::on_button_clicked_step() {
 	if (!started) {
-		on_timeout();
+		on_timeout(false);
 	}
 }
 
@@ -272,12 +270,17 @@ void MyEvent::on_check_button_toggled() {
 }
 
 
-bool MyEvent::on_timeout()
+bool MyEvent::on_timeout(bool nouv_sim)
 {
 	static unsigned int val(1);
 	if(disconnect){
 		disconnect = false;
 		return false;
+	}
+
+	if(nouv_sim) {
+		val = 1;
+		return true;
 	}
 	
 	timer_data.set_text(std::to_string(val));
@@ -300,6 +303,12 @@ void MyEvent::on_file_dialog_response (int response_id, Gtk::FileChooserDialog* 
 		Gtk::FileChooser::Action action = dialog->get_action();
 		if (action == Gtk::FileChooser::Action::OPEN) {
 			simulation.readFile(filename);
+			nb_alg.set_text(std::to_string(simulation.nb_alg()));
+			nb_cor.set_text(std::to_string(simulation.nb_cor()));
+			nb_sca.set_text(std::to_string(simulation.nb_sca()));
+			timer_data.set_text("0");
+			on_timeout(true);
+
 			m_Area.queue_draw();
 		}
 		else if (action == Gtk::FileChooser::Action::SAVE) {
@@ -312,9 +321,7 @@ void MyEvent::on_file_dialog_response (int response_id, Gtk::FileChooserDialog* 
 
 
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
-	cr->set_source_rgb(1., 1., 1.);
-	cr->rectangle(0,0, frame.width, frame.height);
-	cr->fill();
+	draw_square(1., dmax-1, dmax/2, dmax/2, GREY);
 }
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {

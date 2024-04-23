@@ -54,7 +54,7 @@ protected:
 	void on_check_button_toggled();
 	bool on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state);
 	void on_file_dialog_response(int button_type, Gtk::FileChooserDialog* dialog);
-	bool on_timeout();
+	bool on_timeout(bool nouv_sim);
 
 	bool started = false;
 	bool timer_added;
