@@ -14,7 +14,8 @@ void S2d::operator=(S2d const& other) {
 }
 
 Segment::Segment(S2d origin, double angle, double length) 
-:origin(origin), angle(angle), length(length) {
+:origin(origin), angle(angle), length(length), length_outside(false), \
+angle_outside(false) {
     if(!((angle >= -M_PI) and (angle <= M_PI))) {
         angle_outside = true;
     }

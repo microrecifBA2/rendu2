@@ -20,11 +20,10 @@ private:
     S2d origin;
     double angle;
     double length;
-    bool length_outside = false;
-    bool angle_outside = false;
+    bool length_outside;
+    bool angle_outside;
 public:
     Segment(S2d origin, double angle, double length);
-    Segment() = default;
     S2d getOrigin() const;
     S2d getEnd() const;
     double getAngle() const;
