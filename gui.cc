@@ -82,24 +82,23 @@ void MyArea::adjustFrame(int width, int height)
 
 
 MyEvent::MyEvent(Simulation simulation_):
-	simulation(simulation_),
-	m_Area(&simulation),
+	simulation(simulation_), m_Area(&simulation),
 	m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
 	m_Interface_Box(Gtk::Orientation::VERTICAL, 2),
-	m_Buttons_Box(Gtk::Orientation::VERTICAL, 6),
 	m_Infos_Box(Gtk::Orientation::VERTICAL, 4),
-	m_Label_General("General"),
+	m_Buttons_Box(Gtk::Orientation::VERTICAL, 6),
+	m_maj_Box(Gtk::Orientation::HORIZONTAL, 2),
+	m_AlgCount_Box(Gtk::Orientation::HORIZONTAL, 2),
+	m_CorCount_Box(Gtk::Orientation::HORIZONTAL, 2),
+	m_ScaCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_Button_Exit("exit"),
 	m_Button_Open("open"),
 	m_Button_Save("save"),
 	m_Button_Start("start"),
 	m_Button_Step("step"),
 	m_CheckButton_Algues("Naissance d'algues"),
+	m_Label_General("General"),
 	m_Label_Infos("Info : nombre de ..."),
-	m_maj_Box(Gtk::Orientation::HORIZONTAL, 2),
-	m_AlgCount_Box(Gtk::Orientation::HORIZONTAL, 2),
-	m_CorCount_Box(Gtk::Orientation::HORIZONTAL, 2),
-	m_ScaCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_Label_NbMaj("mise à jour: "),
 	m_Label_Alg("algues: "),
 	m_Label_Cor("coraux: "),
@@ -116,6 +115,7 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_Main_Box.append(m_Interface_Box);
 	m_Main_Box.append(m_Area);
 	m_Interface_Box.append(m_Buttons_Box);
+	m_Interface_Box.append(separateur);
 	m_Interface_Box.append(m_Infos_Box);
 	
 	m_Buttons_Box.append(m_Label_General);

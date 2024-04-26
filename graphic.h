@@ -1,8 +1,7 @@
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 
-enum Color
-{
+enum Color {
     BLACK,
     RED,
     GREEN,

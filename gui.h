@@ -7,6 +7,7 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/label.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm/separator.h>
 #include <gtkmm.h>
 
 #include "graphic_gui.h"
@@ -63,22 +64,23 @@ protected:
 
 	MyArea m_Area;
 
-	Gtk::Box m_Main_Box;
-	Gtk::Box m_Interface_Box;
-	Gtk::Box m_Buttons_Box;
+	Gtk::Box m_Main_Box, m_Interface_Box;
 	Gtk::Box m_Infos_Box;
-	Gtk::Label m_Label_General;
+	Gtk::Box m_Buttons_Box;
+	Gtk::Box m_maj_Box;
+	Gtk::Box m_AlgCount_Box;
+	Gtk::Box m_CorCount_Box;
+	Gtk::Box m_ScaCount_Box;
+
 	Gtk::Button m_Button_Exit;
 	Gtk::Button m_Button_Open;
 	Gtk::Button m_Button_Save;
 	Gtk::Button m_Button_Start;
 	Gtk::Button m_Button_Step;
 	Gtk::CheckButton m_CheckButton_Algues;
+	
+	Gtk::Label m_Label_General;
 	Gtk::Label m_Label_Infos;
-	Gtk::Box m_maj_Box;
-	Gtk::Box m_AlgCount_Box;
-	Gtk::Box m_CorCount_Box;
-	Gtk::Box m_ScaCount_Box;
 	Gtk::Label m_Label_NbMaj;
 	Gtk::Label m_Label_Alg;
 	Gtk::Label m_Label_Cor;
@@ -87,6 +89,8 @@ protected:
 	Gtk::Label nb_alg;
 	Gtk::Label nb_cor;
 	Gtk::Label nb_sca;
+
+	Gtk::Separator separateur;
 };
 
 #endif // GUI_H
