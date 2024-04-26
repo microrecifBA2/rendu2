@@ -13,8 +13,7 @@ void S2d::operator=(S2d const& other) {
 }
 
 Segment::Segment(S2d origin, double angle, double length) 
-:origin(origin), angle(angle), length(length)
-{
+:origin(origin), angle(angle), length(length) {
     if(!((angle >= -M_PI) and (angle <= M_PI))) {
         angle_outside = true;
     }
@@ -78,7 +77,7 @@ double s_product(S2d p, S2d q, S2d r) {
 
 double angleDev(const Segment& seg1, const Segment& seg2) {
 	double delta = seg1.getAngle() + M_PI - seg2.getAngle();
-	if( delta <= M_PI) {
+	if (delta <= M_PI) {
 		return delta;
 	}
 	return delta - 2*M_PI;
@@ -128,7 +127,8 @@ bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2, bool reading) {
 }
 
 
-void draw_line(int width_line, double x1, double y1, double x2, double y2, Color couleur) {
+void draw_line(int width_line, double x1, double y1, double x2, double y2, 
+Color couleur) {
     graphic_draw_line(width_line, x1, y1,  x2, y2, couleur);
 }
 

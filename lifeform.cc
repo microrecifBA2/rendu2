@@ -14,10 +14,9 @@ using namespace std;
 
 
 Lifeform::Lifeform(S2d position, double age)
-:position(position), age(age), success(true)
-{
-    if (!((position.x >= 1) && (position.x <= dmax - 1) && (position.y >= 1) && (position.y <= dmax - 1)))
-    {
+:position(position), age(age), success(true) {
+    if (!((position.x >= 1) && (position.x <= dmax - 1) && (position.y >= 1) && \
+    (position.y <= dmax - 1))) {
         cout << message::lifeform_center_outside(position.x, position.y);
         success = false;
         return;
@@ -140,7 +139,7 @@ vector<Segment> Corail::getSegments() const {
 void Corail::draw() {
     draw_square(1., d_cor, position.x, position.y, statut_cor? BLUE : BLACK);
 
-    for (auto& segment: segments){
+    for (auto& segment: segments) {
         double x1 = segment.getOrigin().x;
         double y1 = segment.getOrigin().y;
         double x2= segment.getEnd().x;
@@ -152,9 +151,12 @@ void Corail::draw() {
 
 void Corail::save(fstream& fichier_sauvegarde) {
     Lifeform::save(fichier_sauvegarde);
-    fichier_sauvegarde << to_string(id_cor) << " " << to_string(statut_cor) << " " << to_string(dir_rot) << " " << to_string(statut_dev) << " " << to_string(nbseg) << endl;
+    fichier_sauvegarde << to_string(id_cor) << " " << to_string(statut_cor) << " " 
+                       << to_string(dir_rot) << " " << to_string(statut_dev) << " " 
+                       << to_string(nbseg) << endl;
         for (auto& segment: segments) {
-            fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << to_string(segment.getLength()) << endl;
+            fichier_sauvegarde << "\t \t" << to_string(segment.getAngle()) << " " << \
+                to_string(segment.getLength()) << endl;
         }
 }
 
@@ -165,7 +167,7 @@ Scavenger::Scavenger(double x, double y, double age, double rayon, double status
 {
     if (success) {
         if (!((rayon >= r_sca) && (rayon < r_sca_repro))) {
-            cout << message::scavenger_radius_outside(static_cast<unsigned int>(rayon));
+            cout << message::scavenger_radius_outside(static_cast<unsigned>(rayon));
             success = false;
             return;
         }

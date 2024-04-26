@@ -15,8 +15,7 @@
 
 constexpr unsigned taille_dessin(500);
 
-struct Frame // Model Framing and window parameters
-{
+struct Frame { // Model Framing and window parameters
 	double xMin; // frame parameters
 	double xMax;
 	double yMin;
@@ -64,31 +63,16 @@ protected:
 
 	MyArea m_Area;
 
-	Gtk::Box m_Main_Box, m_Interface_Box;
-	Gtk::Box m_Infos_Box;
-	Gtk::Box m_Buttons_Box;
-	Gtk::Box m_maj_Box;
-	Gtk::Box m_AlgCount_Box;
-	Gtk::Box m_CorCount_Box;
-	Gtk::Box m_ScaCount_Box;
+	Gtk::Box m_Main_Box, m_Interface_Box, m_Infos_Box, \
+		m_Buttons_Box, m_maj_Box, m_AlgCount_Box, m_CorCount_Box, m_ScaCount_Box;
 
-	Gtk::Button m_Button_Exit;
-	Gtk::Button m_Button_Open;
-	Gtk::Button m_Button_Save;
-	Gtk::Button m_Button_Start;
-	Gtk::Button m_Button_Step;
+	Gtk::Button m_Button_Exit, m_Button_Open, m_Button_Save, m_Button_Start, \
+		m_Button_Step;
+		
 	Gtk::CheckButton m_CheckButton_Algues;
 	
-	Gtk::Label m_Label_General;
-	Gtk::Label m_Label_Infos;
-	Gtk::Label m_Label_NbMaj;
-	Gtk::Label m_Label_Alg;
-	Gtk::Label m_Label_Cor;
-	Gtk::Label m_Label_Sca;
-	Gtk::Label timer_data;
-	Gtk::Label nb_alg;
-	Gtk::Label nb_cor;
-	Gtk::Label nb_sca;
+	Gtk::Label m_Label_General, m_Label_Infos, m_Label_NbMaj, m_Label_Alg, \
+		m_Label_Cor, m_Label_Sca, timer_data, nb_alg, nb_cor, nb_sca;
 
 	Gtk::Separator separateur;
 };

@@ -9,7 +9,7 @@
 #include "lifeform.h"
 
 
-class Simulation{
+class Simulation {
 private:
     std::string filename;
     std::vector<Corail> coraux;
@@ -22,8 +22,8 @@ public:
     bool naissance_alg = false;
     std::vector<std::vector<double>> storeTokens(std::ifstream& file);
     bool corVerifs(unsigned &beg_data_entity, unsigned &end_data_entity, \
-		std::vector<std::vector<double>> token_list, bool &cor, unsigned &seg_line, \
-		std::vector<double> line);
+        std::vector<std::vector<double>> token_list, bool &cor, unsigned &seg_line, \
+		    std::vector<double> line);
     bool scaVerifs(std::vector<double> line);
     bool readFile(const std::string &filename);
     bool sauvegarde(std::string nom_sauvegarde = "sauvegarde.txt");

@@ -8,10 +8,11 @@
 
 static Frame default_frame = {0., dmax, 0., dmax, 1.0, dmax/2, dmax/2}; 
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
+	Frame frame);
+	
 MyArea::MyArea(Simulation* simulation)
-:simulation(simulation)
-{
+:simulation(simulation) {
 	setFrame(default_frame);
 	set_content_width(taille_dessin);
 	set_content_height(taille_dessin);
@@ -35,8 +36,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 
 }
 
-void MyArea::setFrame(Frame f)
-{
+void MyArea::setFrame(Frame f) {
 	if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
 	{
 		f.asp = f.width/f.height;
@@ -46,8 +46,7 @@ void MyArea::setFrame(Frame f)
 		std::cout << "incorrect Model framing or window parameters" << std::endl;
 } 
 
-void MyArea::adjustFrame(int width, int height)
-{
+void MyArea::adjustFrame(int width, int height) {
 	frame.width  = width;
 	frame.height = height;
 
@@ -56,8 +55,8 @@ void MyArea::adjustFrame(int width, int height)
 	
     // use the reference framing as a guide for preventing distortion
     double new_aspect_ratio((double)width/height);
-    if( new_aspect_ratio > default_frame.asp)
-    { // keep yMax and yMin. Adjust xMax and xMin
+    if( new_aspect_ratio > default_frame.asp) {
+		// keep yMax and yMin. Adjust xMax and xMin
 	    frame.yMax = default_frame.yMax ;
 	    frame.yMin = default_frame.yMin ;	
 	  
@@ -67,8 +66,8 @@ void MyArea::adjustFrame(int width, int height)
 	    frame.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
 	    frame.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;		  	  
     }
-    else
-    { // keep xMax and xMin. Adjust yMax and yMin
+    else {
+		// keep xMax and xMin. Adjust yMax and yMin
 	    frame.xMax = default_frame.xMax ;
 	    frame.xMin = default_frame.xMin ;
 	  	  
@@ -91,19 +90,12 @@ MyEvent::MyEvent(Simulation simulation_):
 	m_AlgCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_CorCount_Box(Gtk::Orientation::HORIZONTAL, 2),
 	m_ScaCount_Box(Gtk::Orientation::HORIZONTAL, 2),
-	m_Button_Exit("exit"),
-	m_Button_Open("open"),
-	m_Button_Save("save"),
-	m_Button_Start("start"),
-	m_Button_Step("step"),
-	m_CheckButton_Algues("Naissance d'algues"),
-	m_Label_General("General"),
-	m_Label_Infos("Info : nombre de ..."),
-	m_Label_NbMaj("mise à jour: "),
-	m_Label_Alg("algues: "),
-	m_Label_Cor("coraux: "),
-	m_Label_Sca("charognards: "),
-	timer_data("0"),
+	m_Button_Exit("exit"), m_Button_Open("open"), m_Button_Save("save"),
+	m_Button_Start("start"), m_Button_Step("step"),
+	m_CheckButton_Algues("Naissance d'algues"), m_Label_General("General"),
+	m_Label_Infos("Info : nombre de ..."), m_Label_NbMaj("mise à jour: "),
+	m_Label_Alg("algues: "), m_Label_Cor("coraux: "),
+	m_Label_Sca("charognards: "), timer_data("0"),
 	nb_alg(std::to_string(simulation.nb_alg())),
 	nb_cor(std::to_string(simulation.nb_cor())),
 	nb_sca(std::to_string(simulation.nb_sca()))
@@ -162,11 +154,12 @@ MyEvent::MyEvent(Simulation simulation_):
 		sigc::mem_fun(*this, &MyEvent::on_check_button_toggled));
 
 	auto controller = Gtk::EventControllerKey::create();
-	controller->signal_key_pressed().connect(sigc::mem_fun(*this, &MyEvent::on_key_press_event), false);
+	controller->signal_key_pressed().connect(sigc::mem_fun(*this, \
+		&MyEvent::on_key_press_event), false);
     add_controller(controller);
 }
 
-bool MyEvent::on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state) {
+bool MyEvent::on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state){
 	switch (keyval) {
 	case GDK_KEY_s:
 		on_button_clicked_start();
@@ -273,12 +266,12 @@ void MyEvent::on_check_button_toggled() {
 bool MyEvent::on_timeout(bool nouv_sim)
 {
 	static unsigned int val(1);
-	if(disconnect){
+	if (disconnect) {
 		disconnect = false;
 		return false;
 	}
 
-	if(nouv_sim) {
+	if (nouv_sim) {
 		val = 1;
 		return true;
 	}
@@ -296,7 +289,8 @@ bool MyEvent::on_timeout(bool nouv_sim)
 	return true; 
 }
 
-void MyEvent::on_file_dialog_response (int response_id, Gtk::FileChooserDialog* dialog) {
+void MyEvent::on_file_dialog_response (int response_id, \
+	Gtk::FileChooserDialog* dialog) {
 	if (response_id == Gtk::ResponseType::OK) {
 		auto filename = dialog->get_file()->get_path();
 		
@@ -324,13 +318,15 @@ static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
 	draw_square(1., dmax-1, dmax/2, dmax/2, GREY);
 }
 
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
+Frame frame) {
 	// déplace l'origine au centre de la fenêtre
 	cr->translate(frame.width/2, frame.height/2);
   
 	// normalise la largeur et hauteur aux valeurs fournies par le cadrage
 	// ET inverse la direction de l'axe Y
-	cr->scale(frame.width/(frame.xMax - frame.xMin), -frame.height/(frame.yMax - frame.yMin));
+	cr->scale(frame.width/(frame.xMax - frame.xMin), \
+	 - frame.height / (frame.yMax - frame.yMin));
   
 	// décalage au centre du cadrage
 	cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
