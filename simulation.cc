@@ -1,4 +1,5 @@
-// simulation.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// simulation.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+// 375454 : 75%, 376265 : 25%
 
 #include <iostream>
 #include <string>
@@ -107,6 +108,7 @@ bool Simulation::readFile(const string& filename) {
     coraux.clear();
     algues.clear();
     scavengers.clear();
+    sim_success = true;
     
     ifstream file(filename);
     if ((!file.is_open()) or (file.fail())) { 
@@ -167,6 +169,7 @@ bool Simulation::readFile(const string& filename) {
 
         return false;
     }
+
     cout << message::success();
 
     return true;
@@ -185,6 +188,7 @@ bool Simulation::sauvegarde(string nom_sauvegarde) {
     fichier_sauvegarde << to_string(nb_alg) << endl;
     for(auto& algue: algues) {
         algue.save(fichier_sauvegarde);
+        fichier_sauvegarde << endl;
     }
 
     fichier_sauvegarde << endl << to_string(nb_cor) << endl;

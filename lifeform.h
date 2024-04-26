@@ -1,4 +1,4 @@
-// lifeform.h par par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// lifeform.h par par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
 
 #ifndef LIFEFORM_H
 #define LIFEFORM_H

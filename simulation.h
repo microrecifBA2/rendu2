@@ -1,21 +1,21 @@
-// simulation.h par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// simulation.h par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
 
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
 #include <string>
 #include <random>
+
 #include "shape.h"
 #include "lifeform.h"
 
 
 class Simulation {
 private:
-    std::string filename;
     std::vector<Corail> coraux;
     std::vector<Algue> algues;
     std::vector<Scavenger> scavengers;
-    bool sim_success = true; 
+    bool sim_success; 
     std::default_random_engine generator;
 
 public:

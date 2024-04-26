@@ -1,4 +1,5 @@
-// shape.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// shape.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+// 375454 : 0%, 376265 : 100%
 
 #include <cmath>
 #include <iostream>

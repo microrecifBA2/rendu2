@@ -1,3 +1,5 @@
+// gui.h par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+
 #ifndef GUI_H
 #define GUI_H
 
@@ -8,7 +10,9 @@
 #include <gtkmm/label.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/separator.h>
-#include <gtkmm.h>
+#include <gtkmm/filechooserdialog.h>
+#include <gtkmm/eventcontrollerkey.h>
+#include <glibmm/main.h>
 
 #include "graphic_gui.h"
 #include "simulation.h"
@@ -29,13 +33,13 @@ class MyArea : public Gtk::DrawingArea {
 public:
 	MyArea(Simulation* simulation);
 	virtual ~MyArea();
-	
 
 protected:
 	Simulation* simulation;
 	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	void setFrame(Frame x); 
     void adjustFrame(int width, int height);
+
 private:
     Frame frame;
 };

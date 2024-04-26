@@ -1,4 +1,5 @@
-// projet.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// projet.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+// 375454 : 75%, 376265 : 25%
 
 #include <string>
 #include <iostream>

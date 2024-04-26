@@ -1,3 +1,6 @@
+// graphic.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+// 375454 (0%), 376265 (100%)
+
 #include "graphic_gui.h"
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);

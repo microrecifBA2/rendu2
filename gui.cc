@@ -1,3 +1,6 @@
+// gui.cc par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
+// 375454 (50%), 376265 (50%)
+
 #include <cairomm/context.h>
 #include <gtkmm/label.h>
 #include <iostream>
@@ -19,8 +22,7 @@ MyArea::MyArea(Simulation* simulation)
 	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
 }
 
-MyArea::~MyArea()
-{}
+MyArea::~MyArea() {}
 
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
 	graphic_set_context(cr);
@@ -161,12 +163,12 @@ MyEvent::MyEvent(Simulation simulation_):
 
 bool MyEvent::on_key_press_event(guint keyval, guint keycode, Gdk::ModifierType state){
 	switch (keyval) {
-	case GDK_KEY_s:
-		on_button_clicked_start();
-		break;
-	case GDK_KEY_1:
-		on_button_clicked_step();
-		break;
+		case GDK_KEY_s:
+			on_button_clicked_start();
+			break;
+		case GDK_KEY_1:
+			on_button_clicked_step();
+			break;
 	}
 	return true;
 }

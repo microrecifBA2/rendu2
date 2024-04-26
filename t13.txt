@@ -1,5 +1,5 @@
 #
-# Correct file
+# lifeform age(0) is not strictly positive
 #
 
 1
@@ -10,5 +10,5 @@
         0. 12 
 
 1
-    200. 100. 1 5 0 
+    200. 100. 0 5 0 
     

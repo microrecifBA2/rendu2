@@ -1,4 +1,4 @@
-// shape.h par Camille Venisse (375454) et Edgar Ruault (376265), version 1.01
+// shape.h par Camille Venisse (375454) et Edgar Ruault (376265), version 2.0
 
 #ifndef SHAPE_H
 #define SHAPE_H
